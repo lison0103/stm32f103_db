@@ -300,6 +300,7 @@
           <state>$PROJ_DIR$\..\HARDWARE\LED</state>
           <state>$PROJ_DIR$\..\HARDWARE\EWDT</state>
           <state>$PROJ_DIR$\..\HARDWARE\DIGITAL_LED</state>
+          <state>$PROJ_DIR$\..\HARDWARE\CAN</state>
           <state>$PROJ_DIR$\..\SYSTEM</state>
         </option>
         <option>
@@ -1927,6 +1928,9 @@
   </group>
   <group>
     <name>HARDWARE</name>
+    <file>
+      <name>$PROJ_DIR$\..\HARDWARE\CAN\can.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\HARDWARE\DIGITAL_LED\digital_led.c</name>
     </file>
