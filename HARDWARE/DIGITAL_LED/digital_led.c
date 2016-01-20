@@ -32,22 +32,25 @@ void digital_led_gpio_init(void)
 
 void txbyte(u8 dat)
 {
-    u8 i,j;
+    u8 i,j,k;
     
+    LED_OE = 0;
     j = dat;
     for(i = 0; i < 8; i++)
     {
-        LED_SDI = (j&0x80)>>7;
-        
         LED_SCLK = 0;
+      
+        k = (j&0x80)>>7;
+        
+        LED_SDI = k;
+                                  
+        j <<= 1;
         
         LED_SCLK = 1;
-        
-        j <<= 1;
     }
     
     LED_RCLK = 0;
-    
+    delay_us(1);
     LED_RCLK = 1;
 }
 
@@ -82,9 +85,9 @@ void digital_led_check(void)
 {
     u8 count = 0;
   
-    for(u8 i = 0; i < 9; i++)
+    for(u8 i = 0; i < 11; i++)
     {
-        count = 20;
+        count = 100;
         
         for(u8 j = 0; j < 3; j++)
         {
@@ -94,7 +97,7 @@ void digital_led_check(void)
         while(count)
         {
           led_display();
-          delay_ms(50);              
+          delay_ms(2);              
           count--;
         }  
         

@@ -13,6 +13,7 @@
 #include "ewdt.h"
 #include "digital_led.h"
 #include "can.h"
+#include "hw_test.h"
 
 
 void can_test(void)
@@ -87,9 +88,6 @@ int main(void)
         
         delay_init();
         
-        //外部看门狗初始化
-//        EWDT_Drv_pin_config();
-//        power_on_bsp_check();
         
         //初始化与LED连接的硬件接口
 	LED_Init();	
@@ -104,7 +102,11 @@ int main(void)
         
         
         //can测试
-        can_test();
+//        can_test();
+        
+        HW_TEST_INIT();
+        HW_TEST();
+        
 }
 	   
 
