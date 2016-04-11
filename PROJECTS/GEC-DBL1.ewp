@@ -581,7 +581,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>stm32f103.hex</state>
+          <state>GEC-DBL1.hex</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -635,7 +635,7 @@
         </option>
         <option>
           <name>IlinkOutputFile</name>
-          <state>stm32f103.out</state>
+          <state>GEC-DBL1.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -1855,12 +1855,6 @@
       <name>CMSIS</name>
       <file>
         <name>$PROJ_DIR$\..\Libraries\CMSIS\startup\startup_stm32f10x_cl.s</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\Libraries\CMSIS\startup\startup_stm32f10x_md.s</name>
-        <excluded>
-          <configuration>Debug</configuration>
-        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\CMSIS\system_stm32f10x.c</name>
