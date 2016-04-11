@@ -12,6 +12,29 @@ u8 dis_data[3]={0,0,0};
 *******************************************************************************/
 void digital_led_gpio_init(void)
 {
+    
+#ifdef GEC_DBL1
+      GPIO_InitTypeDef GPIO_InitStructure;
+          
+      /* Enable GPIO clock */
+      RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA | RCC_AHBPeriph_GPIOB | RCC_AHBPeriph_GPIOC, ENABLE);
+      
+      
+      GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;
+      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+      GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+      GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+      GPIO_Init(GPIOA, &GPIO_InitStructure);    
+      
+      GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+      GPIO_Init(GPIOB, &GPIO_InitStructure);
+      
+      GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
+      GPIO_Init(GPIOC, &GPIO_InitStructure);      
+      
+#else
+      
       GPIO_InitTypeDef GPIO_InitStruct;
       
       GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;             
@@ -24,7 +47,7 @@ void digital_led_gpio_init(void)
       
       GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5; 
       GPIO_Init(GPIOC, &GPIO_InitStruct);        
-      
+#endif     
       LED_OE = 0;
       delay_ms(2);
       LED_OE = 1;

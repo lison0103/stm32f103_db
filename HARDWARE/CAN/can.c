@@ -24,6 +24,26 @@ u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 	NVIC_InitTypeDef  		NVIC_InitStructure;
 #endif
 
+#ifdef GEC_DBL1
+        /* Enable GPIO clock */
+        RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+        
+        /* Enable CAN clock */
+        RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);
+
+        /* Connect CAN pins to AF9 */
+        GPIO_PinAFConfig(GPIOA, GPIO_PinSource11, GPIO_AF_9);
+        GPIO_PinAFConfig(GPIOA, GPIO_PinSource12, GPIO_AF_9); 
+        
+        /* Configure CAN RX and TX pins */
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+        GPIO_Init(GPIOA, &GPIO_InitStructure);        
+        
+#else
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);//使能PORTA时钟	                   											 
 
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);//使能CAN1时钟	
@@ -36,7 +56,7 @@ u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	//上拉输入
 	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
-
+#endif
 	//CAN单元设置
 	CAN_InitStructure.CAN_TTCM=DISABLE;			//非时间触发通信模式  
 	CAN_InitStructure.CAN_ABOM=DISABLE;			//软件自动离线管理	 
