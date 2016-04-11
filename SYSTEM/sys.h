@@ -1,7 +1,10 @@
 #ifndef __SYS_H
 #define __SYS_H	
+#ifdef GEC_DBL1
+#include "stm32f30x.h"
+#else
 #include "stm32f10x.h"
-//#include "usart.h"
+#endif
 																	    
 	 
 //位带操作,实现51类似的GPIO控制功能
