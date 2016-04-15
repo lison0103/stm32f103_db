@@ -1,103 +1,164 @@
-/****************************************Copyright (c)****************************************************
-** File Name:           main.c
-** Created By:          lisonchen
-** Created date:        2015-12-22
-** Version:             v0.1
-** Descriptions:        stm32f103xb
-** Last Update:         2015-12-28           
-*********************************************************************************************************/
+/*******************************************************************************
+* File Name          : main.c
+* Author             : lison
+* Version            : V1.0
+* Date               : 04/15/2016
+* Description        : 
+*                      
+*******************************************************************************/
 
-#include "sys.h"
-#include "delay.h"   
-#include "led.h"
-#include "ewdt.h"
-#include "digital_led.h"
-#include "can.h"
-#include "hw_test.h"
+/* Includes ------------------------------------------------------------------*/
+#include "initial_devices.h"
 
 
-void can_test(void)
- {	 
-	u8 i=0,t=0;
-	u8 cnt=0;
-	u8 canbuf[8];
-	u8 res;
-        u8 can_rcv;
-	u8 mode=CAN_Mode_Normal;//CAN工作模式;CAN_Mode_Normal(0)：普通模式，CAN_Mode_LoopBack(1)：环回模式
+/* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+static u16 Tms10Counter=0,Tms20Counter=0,Tms50Counter=0,Tms100Counter=0,Tms500Counter=0,Tms1000Counter=0;
 
-	 	
-   
-	CAN_Mode_Init(CAN_SJW_2tq,CAN_BS2_5tq,CAN_BS1_3tq,20,mode);//CAN初始化环回模式,波特率500Kbps    
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 
+u32 TimingDelay = 0;
+u32 SysRunTime = 0; 
+
+/*******************************************************************************
+* Function Name  : LED_indicator
+* Description    : 
+*                  
+* Input          : None
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void LED_indicator(void)
+{
+	static u32 led_idr_cnt=0;	 
 	
- 	while(1)
+	led_idr_cnt++;
+	
+	if( led_idr_cnt >= 100 )
 	{
-
-#if 0
-			for(i=0;i<8;i++)
-			{
-				canbuf[i]=cnt+i;//填充发送缓冲区
-//				printf("%s",canbuf[i]);	//显示数据
-
- 			}
-			res=Can_Send_Msg(canbuf,8);//发送8个字节 
-			if(res)
-			{}
-                        else
-                          delay_ms(10);
-                        
-
-#else		 
-		can_rcv=Can_Receive_Msg(canbuf);
-		if(can_rcv)//接收到有数据
-		{			
-			
- 			for(i=0;i<can_rcv;i++)
-			{									    
-//				printf("%s",canbuf[i]);	//显示数据
- 			}
-		}
-#endif                
-		t++; 
-		delay_ms(10);
-		if(t==20)
-		{
-			LED=!LED;//提示系统正在运行	
-			t=0;
-			cnt++;
-		}		   
-	}
+                led_idr_cnt = 0;
+		LED=!LED;                
+	}   
 }
 
 
+/*******************************************************************************
+* Function Name  : Task_Loop
+* Description    : 
+*                  
+* Input          : None
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void Task_Loop(void)
+{          
+
+      if( ++Tms10Counter>=2 ) Tms10Counter=0;
+      if( ++Tms20Counter>=4 ) Tms20Counter=0;
+      if( ++Tms50Counter>=9 ) Tms50Counter=0;
+      if( ++Tms100Counter>=19 ) Tms100Counter=0;
+      if( ++Tms500Counter>=99 ) Tms500Counter=0;
+      if( ++Tms1000Counter>=200 ) Tms1000Counter=0;      
+
+      
+
+      if( Tms10Counter == 0 )
+      {
+        
+      }      
+      if( Tms20Counter == 0 )
+      {
+      
+      }  
+         
+      if( Tms50Counter == 0 )
+      {                                 
+          /* Reload EWDT counter */          
+          EWDT_TOOGLE();
+
+          
+//          Input_Check();           
+          CAN_Comm();  
+      } 
+      
+      if( Tms100Counter == 0 )
+      {         
+
+      }
+           
+      if( Tms500Counter == 0 )
+      {             
+            
+      }
+      
+      if( Tms1000Counter == 0 )
+      {
+
+      }
+     
+}
+
+
+/*******************************************************************************
+* Function Name  : main
+* Description    : 
+*                  
+* Input          : None
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
 int main(void)
-{ 
-        //设置系统中断优先级分组2
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-        
-        delay_init();
-        
-        
-        //初始化与LED连接的硬件接口
-	LED_Init();	
-        
-        //DB板上下端地址选择初始化
-//        SW_DP_Init();
-//        ReadSwDp();
-        
-        //数码管初始化
-        digital_led_gpio_init();               
-        digital_led_check();       
-        
-        
-        //can测试
-        can_test();
-        
-//        HW_TEST_INIT();
-//        HW_TEST();
-        
+{        
+  
+    /** hardware init **/
+    Bsp_Init();    
+    
+    while(1)
+    {
+      
+        /* 5ms */
+        while ( !TimingDelay );
+        TimingDelay = 0;
+
+        Task_Loop();
+        LED_indicator();
+   
+    }          
+          
 }
-	   
+
+
+#ifdef  USE_FULL_ASSERT
+
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *   where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t* file, uint32_t line)
+{
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+  /* Infinite loop */
+  while (1)
+  {}
+}
+#endif
+
+/**
+  * @}
+  */
+
+/******************************  END OF FILE  *********************************/
 
 
 

@@ -25,7 +25,14 @@
 #include "stm32f10x_it.h" 
 
 
- 
+/* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+    
+extern u32 TimingDelay;    
+extern u32 SysRunTime;
 void NMI_Handler(void)
 {
 }
@@ -75,9 +82,11 @@ void DebugMon_Handler(void)
 //{
 //}
 // 
-//void SysTick_Handler(void)
-//{
-//}
+void SysTick_Handler(void)
+{ 
+      TimingDelay++;
+      SysRunTime++;
+}
 
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */

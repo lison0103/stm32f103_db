@@ -1,14 +1,46 @@
+/*******************************************************************************
+* File Name          : digital_led.c
+* Author             : lison
+* Version            : V1.0
+* Date               : 03/23/2016
+* Description        : 
+*                      
+*******************************************************************************/
+
+
+/* Includes ------------------------------------------------------------------*/
 #include "digital_led.h"
 #include "sys.h"
 #include "delay.h"
 #include "ewdt.h"
 
-const u8 led_dm[3] = {0x04,0x3d,0x00}; //a,s,f 
-const u8 bcd[10] = {0x04,0x3d,0x41,0x11,0x38,0x12,0x02,0x35,0x00,0x10}; 
+/* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+#define LED_NUM1        PAout(4)
+#define LED_NUM2        PAout(5)
+#define LED_NUM3        PAout(6)
+#define LED_SCLK        PBout(1)
+#define LED_RCLK        PBout(0)
+#define LED_OE          PCout(5)
+#define LED_SDI         PCout(4) 
+
+/* Private variables ---------------------------------------------------------*/
+const u8 bcd[11] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff}; //0~9£¬null
+
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 
 u8 dis_data[3]={0,0,0};
 
 /*******************************************************************************
+* Function Name  : digital_led_gpio_init
+* Description    : None
+*                  
+* Input          : None
+*                  
+* Output         : None
+* Return         : None
 *******************************************************************************/
 void digital_led_gpio_init(void)
 {
@@ -53,6 +85,15 @@ void digital_led_gpio_init(void)
       LED_OE = 1;
 }
 
+/*******************************************************************************
+* Function Name  : txbyte
+* Description    : None
+*                  
+* Input          : None
+*                  
+* Output         : None
+* Return         : None
+*******************************************************************************/
 void txbyte(u8 dat)
 {
     u8 i,j,k;
@@ -77,6 +118,15 @@ void txbyte(u8 dat)
     LED_RCLK = 1;
 }
 
+/*******************************************************************************
+* Function Name  : led_display1
+* Description    : None
+*                  
+* Input          : None
+*                  
+* Output         : None
+* Return         : None
+*******************************************************************************/
 void led_display1(void)
 {
   static u32 dis_cnt=0;
@@ -104,6 +154,15 @@ void led_display1(void)
   }    
 }
 
+/*******************************************************************************
+* Function Name  : digital_led_check
+* Description    : None
+*                  
+* Input          : None
+*                  
+* Output         : None
+* Return         : None
+*******************************************************************************/
 void digital_led_check(void)
 {
     u8 count = 0;
@@ -129,11 +188,20 @@ void digital_led_check(void)
 }
 
 /*******************************************************************************
+* Function Name  : led_display
+* Description    : None
+*                  
+* Input          : None
+*                  
+* Output         : None
+* Return         : None
 *******************************************************************************/
 void led_display(void)
 {  
   led_display1();                                                                                    
 }
 
-/*******************************************************************************
-*******************************************************************************/
+/******************************  END OF FILE  *********************************/
+
+
+

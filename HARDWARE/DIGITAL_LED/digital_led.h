@@ -1,17 +1,37 @@
+/*******************************************************************************
+* File Name          : digital_led.h
+* Author             : lison
+* Version            : V1.0
+* Date               : 04/15/2016
+* Description        : 
+*			          
+*******************************************************************************/
+
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __DIGITAL_LED_H
 #define __DIGITAL_LED_H	
 
-#define LED_NUM1        PAout(4)
-#define LED_NUM2        PAout(5)
-#define LED_NUM3        PAout(6)
+/* Includes ------------------------------------------------------------------*/
+#include "sys.h"
 
-#define LED_SCLK        PBout(1)
-#define LED_RCLK        PBout(0)
-#define LED_OE          PCout(5)
-#define LED_SDI         PCout(4)
-
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
 void led_display(void);
 void digital_led_gpio_init(void);
 void digital_led_check(void);
 
-#endif
+extern u8 dis_data[3];
+
+
+
+#endif /* __DIGITAL_LED_H */
+
+
+/******************************  END OF FILE  *********************************/
+
+
+
+
+

@@ -1,8 +1,24 @@
-#ifndef __HW_TEST_H
-#define __HW_TEST_H	
+/*******************************************************************************
+* File Name          : bsp_iocfg.h
+* Author             : lison
+* Version            : V1.0
+* Date               : 04/15/2016
+* Description        : 
+*			          
+*******************************************************************************/
 
-void HW_TEST_INIT(void);
-void HW_TEST(void);
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __BSP_IOCFG_H
+#define __BSP_IOCFG_H
+
+/* Includes ------------------------------------------------------------------*/
+#include "sys.h"
+
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
+void Input_Output_PinInit(void);
 
 
 //INPUT
@@ -52,5 +68,10 @@ void HW_TEST(void);
 
 
 
+#endif /* __BSP_IOCFG_H */
 
-#endif
+
+/******************************  END OF FILE  *********************************/
+
+
+

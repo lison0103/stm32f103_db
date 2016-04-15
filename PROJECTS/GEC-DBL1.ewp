@@ -2142,8 +2142,7 @@
           <state>$PROJ_DIR$\..\HARDWARE\EWDT</state>
           <state>$PROJ_DIR$\..\HARDWARE\DIGITAL_LED</state>
           <state>$PROJ_DIR$\..\HARDWARE\CAN</state>
-          <state>$PROJ_DIR$\..\SYSTEM</state>
-          <state>$PROJ_DIR$\..\APP</state>
+          <state>$PROJ_DIR$\..\BSP</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -3695,9 +3694,21 @@
     </settings>
   </configuration>
   <group>
-    <name>APP</name>
+    <name>BSP</name>
     <file>
-      <name>$PROJ_DIR$\..\APP\hw_test.c</name>
+      <name>$PROJ_DIR$\..\BSP\bsp_iocfg.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\BSP\delay.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\BSP\hw_test.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\BSP\initial_devices.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\BSP\sys.c</name>
     </file>
   </group>
   <group>
@@ -3739,6 +3750,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_adc.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_bkp.c</name>
@@ -3748,18 +3762,30 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_cec.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_crc.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dac.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dbgmcu.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_exti.c</name>
@@ -3769,15 +3795,24 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_fsmc.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_gpio.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_i2c.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_iwdg.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_pwr.c</name>
@@ -3787,21 +3822,36 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_rtc.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_sdio.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_usart.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_wwdg.c</name>
+        <excluded>
+          <configuration>GEC-DBL1-TEST</configuration>
+        </excluded>
       </file>
     </group>
     <group>
@@ -3899,16 +3949,10 @@
     </file>
   </group>
   <group>
-    <name>SYSTEM</name>
-    <file>
-      <name>$PROJ_DIR$\..\SYSTEM\delay.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\SYSTEM\sys.c</name>
-    </file>
-  </group>
-  <group>
     <name>USER</name>
+    <file>
+      <name>$PROJ_DIR$\includes.h</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\main.c</name>
     </file>
