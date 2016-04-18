@@ -53,7 +53,7 @@ void Bsp_Init(void)
         power_on_bsp_check();
         
         /** Read swdp value, set the DBL1 UP or DBL1 DOWN **/
-        ReadSwDp();
+//        ReadSwDp();
              
         /** CAN1 init,baud rate 250Kbps **/
 	CAN_Mode_Init(CAN1,CAN_Mode_Normal);   

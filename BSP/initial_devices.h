@@ -15,7 +15,7 @@
 #include "sys.h"
 #include "delay.h"    
 #include "led.h"
-#include "hw_test.h"
+#include "input.h"
 #include "can.h"
 #include "ewdt.h"
 

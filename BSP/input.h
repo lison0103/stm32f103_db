@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name          : hw_test.h
+* File Name          : input.h
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
@@ -8,8 +8,8 @@
 *******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __HW_TEST_H
-#define __HW_TEST_H
+#ifndef __INPUT_H
+#define __INPUT_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "sys.h"
@@ -24,7 +24,7 @@ void CAN_Comm(void);
 
 
 
-#endif  /* __HW_TEST_H */
+#endif  /* __INPUT_H */
 
 
 /******************************  END OF FILE  *********************************/

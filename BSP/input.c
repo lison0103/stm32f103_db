@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name          : hw_test.c
+* File Name          : input.c
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
@@ -10,10 +10,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "sys.h"
 #include "delay.h"
-#include "hw_test.h"
+#include "input.h"
 #include "led.h"
 #include "digital_led.h"
 #include "can.h"
+#include "includes.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -23,7 +24,7 @@
 /* Private functions ---------------------------------------------------------*/
 
 extern u8 dis_data[3];
-
+u8 sflag,inputnum = 0;
 
 /*******************************************************************************
 * Function Name  : Input_Check
@@ -36,34 +37,12 @@ extern u8 dis_data[3];
 *******************************************************************************/
 void Input_Check(void)
 {
-    u8 sflag,t,inputnum = 0;
-  
-    OCP1 = 0;
-    OCP2 = 0;
-    OCP3 = 0;
-    OCP4 = 0;
-    OCP5 = 0;
+         
+        dis_data[0] = 0;
+        dis_data[1] = 0;
+        dis_data[2] = 0;
     
-    OTP1 = 0;
-    OTP2 = 0;
-    OTP3 = 0;
-    
-//    OCP1 = 1;
-//    OCP2 = 1;
-//    OCP3 = 1;
-//    OCP4 = 1;
-//    OCP5 = 1;
-//    
-//    OTP1 = 1;
-//    OTP2 = 1;
-//    OTP3 = 1;
-    
-    dis_data[0] = 0;
-    dis_data[1] = 0;
-    dis_data[2] = 0;
-    
-    while(1)
-    {
+
         sflag = 0;
         inputnum = 0;
         
@@ -377,16 +356,7 @@ void Input_Check(void)
         }
         
         led_display();
-        
-        delay_ms(1);
-        t++;
-        if(t==200)
-        {
-            LED=!LED;
-            t=0;
-        }        
-        
-    }
+ 
 }
 
 /*******************************************************************************
@@ -406,10 +376,19 @@ void CAN_Comm(void)
         
         for(i=0;i<8;i++)
         {
-            canbuf[i]=i;
-            
+            canbuf[i]=i;            
         }
-        Can_Send_Msg( CAN1, 0x3456, canbuf, 8 );
+        
+        /* DBL1 UP */
+        if( kz_data_array[0] == 1 )
+        {
+            Can_Send_Msg( CAN1, 0x3456, canbuf, 8 );
+        }
+        /* DBL1 DOWN */
+        else if( kz_data_array[0] == 2 )
+        {
+            Can_Send_Msg( CAN1, 0x3488, canbuf, 8 );
+        }
 		   
 
 }

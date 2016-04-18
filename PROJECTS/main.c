@@ -15,13 +15,14 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static u16 Tms10Counter=0,Tms20Counter=0,Tms50Counter=0,Tms100Counter=0,Tms500Counter=0,Tms1000Counter=0;
+static u16 Tms10Counter=0,Tms20Counter=0,Tms50Counter=0,Tms100Counter=0;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
 u32 TimingDelay = 0;
 u32 SysRunTime = 0; 
+u8 kz_data_array[30];
 
 /*******************************************************************************
 * Function Name  : LED_indicator
@@ -61,9 +62,7 @@ void Task_Loop(void)
       if( ++Tms10Counter>=2 ) Tms10Counter=0;
       if( ++Tms20Counter>=4 ) Tms20Counter=0;
       if( ++Tms50Counter>=9 ) Tms50Counter=0;
-      if( ++Tms100Counter>=19 ) Tms100Counter=0;
-      if( ++Tms500Counter>=99 ) Tms500Counter=0;
-      if( ++Tms1000Counter>=200 ) Tms1000Counter=0;      
+      if( ++Tms100Counter>=19 ) Tms100Counter=0;     
 
       
 
@@ -73,16 +72,15 @@ void Task_Loop(void)
       }      
       if( Tms20Counter == 0 )
       {
-      
+          GetAdr();
       }  
          
       if( Tms50Counter == 0 )
       {                                 
           /* Reload EWDT counter */          
           EWDT_TOOGLE();
-
           
-//          Input_Check();           
+          Input_Check();           
           CAN_Comm();  
       } 
       
@@ -91,15 +89,6 @@ void Task_Loop(void)
 
       }
            
-      if( Tms500Counter == 0 )
-      {             
-            
-      }
-      
-      if( Tms1000Counter == 0 )
-      {
-
-      }
      
 }
 

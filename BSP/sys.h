@@ -71,6 +71,7 @@
 
 
 /* Exported functions ------------------------------------------------------- */
+void GetAdr(void);
 u32 GetLockCode(void);		
 //以下为汇编函数
 void WFI_SET(void);	//执行WFI指令

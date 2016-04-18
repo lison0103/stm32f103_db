@@ -11,7 +11,7 @@
 #include "can.h"
 #include "led.h"
 #include "delay.h"
-
+#include "includes.h"
 	 
  
 /* Private typedef -----------------------------------------------------------*/
@@ -154,10 +154,10 @@ u8 CAN_Mode_Init(CAN_TypeDef* CANx,u8 mode)
 //            CAN_FilterInitStructure.CAN_FilterMaskIdLow=0xfffc;
             
             //ext id
-            CAN_FilterInitStructure.CAN_FilterIdHigh=(((u32)0x3234<<3)&0xFFFF0000)>>16;	
-            CAN_FilterInitStructure.CAN_FilterIdLow=(((u32)0x3234<<3)|CAN_ID_EXT|CAN_RTR_DATA)&0xFFFF;
+            CAN_FilterInitStructure.CAN_FilterIdHigh=(((u32)0x1234<<3)&0xFFFF0000)>>16;	
+            CAN_FilterInitStructure.CAN_FilterIdLow=(((u32)0x1234<<3)|CAN_ID_EXT|CAN_RTR_DATA)&0xFFFF;
             CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0xffff;//32 bit MASK
-            CAN_FilterInitStructure.CAN_FilterMaskIdLow=0xfffc;            
+            CAN_FilterInitStructure.CAN_FilterMaskIdLow=0xce8e;            
             CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0;
             CAN_FilterInitStructure.CAN_FilterActivation=ENABLE;
 
@@ -208,15 +208,33 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
     {
         
         CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
-        if( ( RxMessage.ExtId == 0x3234 ) && ( RxMessage.IDE == CAN_ID_EXT ) )
+        
+        /* DBL1 UP */
+        if( kz_data_array[0] == 1 )
         {
-            can1_receive = 1;        
-            for( u8 i = 0; i < RxMessage.DLC; i++ )
+            if( ( RxMessage.ExtId == 0x1234 ) && ( RxMessage.IDE == CAN_ID_EXT ) )
             {
-                /* receive data */
-//                printf("CAN1_RX0[%d]:%d\r\n",i,RxMessage.Data[i]);
+                can1_receive = 1;        
+                for( u8 i = 0; i < RxMessage.DLC; i++ )
+                {
+                    /* receive data */
+//                    printf("CAN1_RX0[%d]:%d\r\n",i,RxMessage.Data[i]);
+                }
             }
         }
+        /* DBL1 UP */
+        else if( kz_data_array[0] == 2 )
+        {
+            if( ( RxMessage.ExtId == 0x2345 ) && ( RxMessage.IDE == CAN_ID_EXT ) )
+            {
+                can1_receive = 1;        
+                for( u8 i = 0; i < RxMessage.DLC; i++ )
+                {
+                    /* receive data */
+//                    printf("CAN1_RX0[%d]:%d\r\n",i,RxMessage.Data[i]);
+                }
+            }
+        }        
     }
 }
 #endif

@@ -19,7 +19,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void Input_Output_PinInit(void);
-
+void SW_DP_Init(void);
 
 //INPUT
 #define IN1     PEin(10)
