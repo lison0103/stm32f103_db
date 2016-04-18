@@ -3067,8 +3067,7 @@
           <state>$PROJ_DIR$\..\HARDWARE\EWDT</state>
           <state>$PROJ_DIR$\..\HARDWARE\DIGITAL_LED</state>
           <state>$PROJ_DIR$\..\HARDWARE\CAN</state>
-          <state>$PROJ_DIR$\..\SYSTEM</state>
-          <state>$PROJ_DIR$\..\APP</state>
+          <state>$PROJ_DIR$\..\BSP</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
