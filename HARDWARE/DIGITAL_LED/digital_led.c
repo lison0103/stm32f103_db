@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 03/23/2016
-* Description        : 
+* Description        : This file contains digital led driver functions.
 *                      
 *******************************************************************************/
 
@@ -35,7 +35,7 @@ u8 dis_data[3]={0,0,0};
 
 /*******************************************************************************
 * Function Name  : digital_led_gpio_init
-* Description    : None
+* Description    : Initialize digital led gpio.
 *                  
 * Input          : None
 *                  
@@ -87,9 +87,9 @@ void digital_led_gpio_init(void)
 
 /*******************************************************************************
 * Function Name  : txbyte
-* Description    : None
+* Description    : Data Conversion
 *                  
-* Input          : None
+* Input          : dat: Need to convert digital
 *                  
 * Output         : None
 * Return         : None
@@ -119,15 +119,15 @@ void txbyte(u8 dat)
 }
 
 /*******************************************************************************
-* Function Name  : led_display1
-* Description    : None
+* Function Name  : led_display
+* Description    : Digital led display.
 *                  
 * Input          : None
 *                  
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void led_display1(void)
+void led_display(void)
 {
   static u32 dis_cnt=0;
   
@@ -156,7 +156,7 @@ void led_display1(void)
 
 /*******************************************************************************
 * Function Name  : digital_led_check
-* Description    : None
+* Description    : Check the digital led.
 *                  
 * Input          : None
 *                  
@@ -185,20 +185,6 @@ void digital_led_check(void)
         
         EWDT_TOOGLE();
     }
-}
-
-/*******************************************************************************
-* Function Name  : led_display
-* Description    : None
-*                  
-* Input          : None
-*                  
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void led_display(void)
-{  
-  led_display1();                                                                                    
 }
 
 /******************************  END OF FILE  *********************************/

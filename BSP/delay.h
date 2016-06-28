@@ -18,7 +18,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void delay_init(void);
+void Delay_Init(void);
 void delay_ms(u16 nms);
 void delay_us(u32 nus);
 

@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : This file contains prototype of the external watchdog functions.
 *			          
 *******************************************************************************/
 
@@ -23,7 +23,7 @@
 /* Exported macro ------------------------------------------------------------*/
 #define EWDT_TOOGLE() 	GPIOA->ODR ^= 0X0008
 
-void power_on_bsp_check(void);
+void ExtWdtCheck(void);
 void EWDT_Drv_pin_config(void);
 
 

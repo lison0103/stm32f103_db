@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : Contains prototype of get the DBL1 adr function.
 *			          
 *******************************************************************************/
 
@@ -69,15 +69,9 @@
 
 
 
-
 /* Exported functions ------------------------------------------------------- */
 void GetAdr(void);
-u32 GetLockCode(void);		
-//以下为汇编函数
-void WFI_SET(void);	//执行WFI指令
-void INTX_DISABLE(void);//关闭所有中断
-void INTX_ENABLE(void);	//开启所有中断
-void MSR_MSP(u32 addr);	//设置堆栈地址
+
 
 
 #endif  /* __SYS_H */

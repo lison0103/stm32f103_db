@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : Contains prototype of the devices initinal.
 *			          
 *******************************************************************************/
 
@@ -24,7 +24,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void Bsp_Init(void);
+void Initial_Device(void);
 void RCC_Configuration(void);
 void NVIC_Configuration(void);
 

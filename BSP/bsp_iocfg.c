@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : Contains input and output pin Initializes.
 *                      
 *******************************************************************************/
 
@@ -134,15 +134,11 @@ void Input_Output_PinInit(void)
   
       GPIO_InitTypeDef GPIO_InitStruct;
 
-#ifdef GEC_DBL1          
-      /* Enable GPIO clock */
-      RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA | RCC_AHBPeriph_GPIOB | RCC_AHBPeriph_GPIOC | RCC_AHBPeriph_GPIOD | RCC_AHBPeriph_GPIOE, ENABLE);  
+#ifdef GEC_DBL1           
       GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
       GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
       GPIO_InitStruct.GPIO_PuPd  = GPIO_PuPd_DOWN;
-#else
-      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOE, ENABLE );
-      
+#else      
       RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
       GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
       GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;   
@@ -334,7 +330,7 @@ void Input_Output_PinInit(void)
 
 /*******************************************************************************
 * Function Name  : SW_DP_Init
-* Description    : 
+* Description    : Initializes the SW DP switch gpio.
 *                  
 * Input          : None
 *                  None
@@ -343,13 +339,9 @@ void Input_Output_PinInit(void)
 *******************************************************************************/
 void SW_DP_Init(void)
 {
-    
-#ifdef GEC_DBL1
       GPIO_InitTypeDef GPIO_InitStructure;
-          
-      /* Enable GPIO clock */
-      RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOD, ENABLE);
       
+#ifdef GEC_DBL1 
       
       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
       GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
@@ -357,11 +349,7 @@ void SW_DP_Init(void)
       GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
       GPIO_Init(GPIOD, &GPIO_InitStructure);               
       
-#else
-      
-      GPIO_InitTypeDef  GPIO_InitStructure;
-      
-      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);	 
+#else	 
       
       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;				 
       GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; 		 

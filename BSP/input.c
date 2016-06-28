@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : Contains input test function.
 *                      
 *******************************************************************************/
 
@@ -28,7 +28,7 @@ u8 sflag,inputnum = 0;
 
 /*******************************************************************************
 * Function Name  : Input_Check
-* Description    : 
+* Description    : Monitor the input pin status and test.
 *                  
 * Input          : None
 *                  None
@@ -86,7 +86,7 @@ void Input_Check(void)
 
 /*******************************************************************************
 * Function Name  : Can_comm
-* Description    : 
+* Description    : Can communication.
 *                  
 * Input          : None
 *                  None

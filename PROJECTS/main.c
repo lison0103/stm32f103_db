@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : Main program body.
 *                      
 *******************************************************************************/
 
@@ -27,16 +27,14 @@ u8 EscRTBuff[100];
 
 /*******************************************************************************
 * Function Name  : LED_indicator
-* Description    : 
-*                  
-* Input          : None
-*                 
+* Description    : LED indicator flashes Timing.                  
+* Input          : None                 
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void LED_indicator(void)
 {
-	static u32 led_idr_cnt=0;	 
+	static u32 led_idr_cnt = 0;	 
 	
 	led_idr_cnt++;
 	
@@ -50,10 +48,8 @@ void LED_indicator(void)
 
 /*******************************************************************************
 * Function Name  : Task_Loop
-* Description    : 
-*                  
-* Input          : None
-*                 
+* Description    : This function contains the task to be executed in a loop.
+* Input          : None                
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -98,10 +94,8 @@ void Task_Loop(void)
 
 /*******************************************************************************
 * Function Name  : main
-* Description    : 
-*                  
-* Input          : None
-*                 
+* Description    : Main program.                 
+* Input          : None                 
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -109,7 +103,7 @@ int main(void)
 {        
   
     /** hardware init **/
-    Bsp_Init();    
+    Initial_Device();    
     
     while(1)
     {

@@ -2,19 +2,20 @@
 * File Name          : delay.c
 * Author             : lison
 * Version            : V1.0
-* Date               : 04/15/2016
-* Description        : 
+* Date               : 03/22/2016
+* Description        : Contains the timing delays.
 *                      
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
 #include "delay.h"
-#include "sys.h"
+#include "timer.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 #define  USE_SYSTICK_DELAY   0
+#define  USE_TIM_DELAY       1
 
 /* Private variables ---------------------------------------------------------*/
 #if USE_SYSTICK_DELAY
@@ -30,15 +31,15 @@ static u16 fac_ms=0;
 #if USE_SYSTICK_DELAY
 
 /*******************************************************************************
-* Function Name  : delay_init
-* Description    : 
-*                  
-* Input          : 
+* Function Name  : Delay_Init
+* Description    : Delay is managed using SysTick
+*                  Initialization delay function
+* Input          : None
 *                 
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void delay_init(void)	 
+void Delay_Init(void)	 
 {
   
 	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);	
@@ -49,9 +50,9 @@ void delay_init(void)
 
 /*******************************************************************************
 * Function Name  : delay_us
-* Description    : 
+* Description    : delay nus
 *                  
-* Input          : 
+* Input          : nus: Number of us want to delay
 *                 
 * Output         : None
 * Return         : None
@@ -77,9 +78,9 @@ void delay_us(u32 nus)
 
 /*******************************************************************************
 * Function Name  : delay_ms
-* Description    : 
+* Description    : delay nms
 *                  
-* Input          : 
+* Input          : nms: Number of ms want to delay
 *                 
 * Output         : None
 * Return         : None
@@ -114,32 +115,109 @@ void delay_ms(u16 nms)
         }
 } 
 
+#elif USE_TIM_DELAY
+
+/*******************************************************************************
+* Function Name  : Delay_Init
+* Description    : Delay is managed using TIM
+*                  Initialization delay function
+* Input          : None
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void Delay_Init(void)	 
+{
+    TIM1_Int_Init(65535, 71);
+}	
+
+/*******************************************************************************
+* Function Name  : delay_us
+* Description    : delay nus
+*                  
+* Input          : nus: Number of us want to delay
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/		    								   
+void delay_us(u32 nus)
+{		
+    TIM_Cmd(TIM1, ENABLE);
+    TIM1->CNT = nus;
+    while((TIM1->CNT > 0) && (TIM1->CNT <= nus)); 
+    TIM_Cmd(TIM1, DISABLE);
+}
+
+/*******************************************************************************
+* Function Name  : delay_ms
+* Description    : delay nms
+*                  
+* Input          : nms: Number of ms want to delay
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void delay_ms(u16 nms)
+{	 		  	  
+    u16 i=0;
+    
+    for( i = 0; i < nms; i++ )
+    {
+        delay_us(1000);
+    }  
+} 
 
 #else
 
-
-void delay_init()	 
+/*******************************************************************************
+* Function Name  : Delay_Init
+* Description    : Coarse delay function
+*                  Initialization delay function
+* Input          : None
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void Delay_Init(void)	 
 {
  
 }
 
-//粗延时函数，微秒
+
+/*******************************************************************************
+* Function Name  : delay_us
+* Description    : Microsecond delay
+*                  
+* Input          : nus: Number of us want to delay
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
 void delay_us(u32 nus)
 {    
    u16 i=0;  
    while(nus--)
    {
-      i=6;  //自己定义
+      i=6;  
       while(i--) ;    
    }
 }
-//毫秒级的延时
+
+/*******************************************************************************
+* Function Name  : delay_ms
+* Description    : Millisecond delay
+*                  
+* Input          : nms: Number of ms want to delay
+*                 
+* Output         : None
+* Return         : None
+*******************************************************************************/
 void delay_ms(u16 nms)
 {    
    u16 i=0;  
    while(nms--)
    {
-      i=8000;  //自己定义
+      i=8000;  
       while(i--) ;    
    }
 }
@@ -149,27 +227,4 @@ void delay_ms(u16 nms)
 
 
 /******************************  END OF FILE  *********************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

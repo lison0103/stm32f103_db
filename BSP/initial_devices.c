@@ -3,7 +3,7 @@
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : 
+* Description        : Contains the devices initinal.
 *                      
 *******************************************************************************/
 
@@ -21,15 +21,15 @@ void PVD_Configuration(void);
 
 
 /*******************************************************************************
-* Function Name  : Bsp_Init
-* Description    : 
+* Function Name  : Initial_Device
+* Description    : Initialize the CPU and peripherals.
 *                  
 * Input          : None
 *                  None
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void Bsp_Init(void)
+void Initial_Device(void)
 {
  
         /** set system interrupt priority group 2 **/
@@ -40,7 +40,7 @@ void Bsp_Init(void)
         PVD_Configuration();
         
         /** delay init **/
-	delay_init();  
+	Delay_Init();  
 
         /** LED init **/
 	LED_Init();
@@ -50,7 +50,7 @@ void Bsp_Init(void)
         
         /** ewdt init **/
         EWDT_Drv_pin_config();
-        power_on_bsp_check();
+        ExtWdtCheck();
         
         /** Read swdp value, set the DBL1 UP or DBL1 DOWN **/
 //        ReadSwDp();
@@ -154,7 +154,7 @@ void RCC_Configuration(void)
 
 /*******************************************************************************
 * Function Name  : NVIC_Configuration
-* Description    : 
+* Description    : Configuring NVIC interrupt group.
 *                  
 * Input          : None
 *                 
@@ -174,7 +174,7 @@ void NVIC_Configuration(void)
 
 /*******************************************************************************
 * Function Name  : PVD_Configuration
-* Description    : 
+* Description    : Configuring system Voltage Detector.
 *                  
 * Input          : None
 *                 

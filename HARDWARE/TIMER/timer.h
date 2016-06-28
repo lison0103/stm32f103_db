@@ -1,33 +1,28 @@
 /*******************************************************************************
-* File Name          : input.h
+* File Name          : timer.h
 * Author             : lison
 * Version            : V1.0
-* Date               : 04/15/2016
-* Description        : Contains prototype of input test function.
+* Date               : 03/22/2016
+* Description        : This file contains prototype of stm32 timer funcions.
 *			          
 *******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __INPUT_H
-#define __INPUT_H
+#ifndef __TIMER_H
+#define __TIMER_H 
 
 /* Includes ------------------------------------------------------------------*/
 #include "sys.h"
-#include "bsp_iocfg.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void Input_Check(void);
-void CAN_Comm(void);
+void TIM1_Int_Init(u16 arr,u16 psc);
 
-
-
-#endif  /* __INPUT_H */
+#endif  /* __TIMER_H */
 
 
 /******************************  END OF FILE  *********************************/
-
 
 

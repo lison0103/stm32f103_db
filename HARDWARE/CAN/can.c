@@ -82,21 +82,21 @@ u8 CAN_Mode_Init(CAN_TypeDef* CANx,u8 mode)
         GPIO_Init(GPIOA, &GPIO_InitStructure);        
         
 #else
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);//使能PORTA时钟	                   											 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	                   											 
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);//使能CAN1时钟	
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);	
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽
-	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	
+	GPIO_Init(GPIOA, &GPIO_InitStructure);			
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	//上拉输入
-	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	
+	GPIO_Init(GPIOA, &GPIO_InitStructure);			
 #endif
         
-            //CAN单元设置
+            
             CAN_DeInit(CANx);
             CAN_StructInit(&CAN_InitStructure);
             
@@ -190,7 +190,7 @@ u8 CAN_Mode_Init(CAN_TypeDef* CANx,u8 mode)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-#if CAN1_RX0_INT_ENABLE	//使能RX0中断
+#if CAN1_RX0_INT_ENABLE	
 			    
 void USB_LP_CAN1_RX0_IRQHandler(void)
 {
@@ -292,13 +292,13 @@ other,Length of the received data;
 **/
 u8 Can_Receive_Msg(CAN_TypeDef* CANx,u8 *buf)
 {		   		   
- 	u32 i;
-	CanRxMsg RxMessage;
-    if( CAN_MessagePending(CAN1,CAN_FIFO0)==0)return 0;		//没有接收到数据,直接退出 
-    CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);//读取数据	
+    u32 i;
+    CanRxMsg RxMessage;
+    if( CAN_MessagePending(CAN1,CAN_FIFO0)==0)return 0;		
+    CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
     for(i=0;i<8;i++)
-    buf[i]=RxMessage.Data[i];  
-	return RxMessage.DLC;	
+        buf[i]=RxMessage.Data[i];  
+    return RxMessage.DLC;	
 }
 
 

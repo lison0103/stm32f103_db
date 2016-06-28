@@ -4383,6 +4383,9 @@
     <file>
       <name>$PROJ_DIR$\..\HARDWARE\LED\led.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\HARDWARE\TIMER\timer.c</name>
+    </file>
   </group>
   <group>
     <name>USER</name>
