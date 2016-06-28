@@ -24,7 +24,7 @@
 /* Exported functions ------------------------------------------------------- */
 
 extern u8 kz_data_array[30];
-
+extern u8 EscRTBuff[100]; 
 
 #endif /* __INCLUDES_H */
 

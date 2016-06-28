@@ -20,6 +20,8 @@
 /* Exported functions ------------------------------------------------------- */
 void Input_Output_PinInit(void);
 void SW_DP_Init(void);
+void Get_GpioInput(u8 inBuff[]);
+void output_driver(u8 out_buff[]);
 
 //INPUT
 #define IN1     PEin(10)

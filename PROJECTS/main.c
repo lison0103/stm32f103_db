@@ -15,7 +15,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static u16 Tms10Counter=0,Tms20Counter=0,Tms50Counter=0,Tms100Counter=0;
+static u16 Tms10Counter = 0,Tms20Counter = 0,Tms50Counter = 0,Tms100Counter = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -23,6 +23,7 @@ static u16 Tms10Counter=0,Tms20Counter=0,Tms50Counter=0,Tms100Counter=0;
 u32 TimingDelay = 0;
 u32 SysRunTime = 0; 
 u8 kz_data_array[30];
+u8 EscRTBuff[100]; 
 
 /*******************************************************************************
 * Function Name  : LED_indicator
@@ -59,13 +60,15 @@ void LED_indicator(void)
 void Task_Loop(void)
 {          
 
-      if( ++Tms10Counter>=2 ) Tms10Counter=0;
-      if( ++Tms20Counter>=4 ) Tms20Counter=0;
-      if( ++Tms50Counter>=9 ) Tms50Counter=0;
-      if( ++Tms100Counter>=19 ) Tms100Counter=0;     
+      if( ++Tms10Counter >= 2 ) Tms10Counter = 0;
+      if( ++Tms20Counter >= 4 ) Tms20Counter = 0;
+      if( ++Tms50Counter >= 9 ) Tms50Counter = 0;
+      if( ++Tms100Counter >= 19 ) Tms100Counter = 0;     
 
       
-
+      Get_GpioInput(&EscRTBuff[4]);
+      output_driver(&EscRTBuff[30]);
+      
       if( Tms10Counter == 0 )
       {
         
