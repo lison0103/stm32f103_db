@@ -58,16 +58,15 @@ void output_driver(u8 out_buff[]);
 #define IN32     PDin(3)
 
 //OUTPUT
-#define OCP1     PBout(8)
-#define OCP2     PBout(9)
-#define OCP3     PEout(0)
-#define OCP4     PBout(5)
-#define OCP5     PBout(6)
-
-#define OTP1     PBout(7)
+#define OTP1     PBout(3)
 #define OTP2     PBout(4)
-#define OTP3     PBout(3)
+#define OTP3     PBout(7)
 
+#define OCP1     PBout(6)
+#define OCP2     PBout(5)
+#define OCP3     PEout(0)
+#define OCP4     PBout(9)
+#define OCP5     PBout(8)
 
 
 #endif /* __BSP_IOCFG_H */

@@ -95,25 +95,44 @@ void Input_Check(void)
 *******************************************************************************/
 void CAN_Comm(void)
  {	 
-	u8 i=0;
-	u8 canbuf[8];
-         
+     
+    static u8 can1_comm_timeout = 0;
+    u8 len = 0;
+    
+    if( can1_receive == 1 )
+    {
+        can1_receive = 0;
+        can1_comm_timeout = 0;
+    }
+    else if( ++can1_comm_timeout >= 3 )
+    {
+        /*  can communication timeout process */
+    }     
+    
+    len = BSP_CAN_Receive(CAN1, &CAN1_RX_UpDown, CAN1_RX_Data, 0);
+    
+    for( u8 i = 4; i < 8; i++ )
+    {
+        CAN1_TX_Data[i] = EscRTBuff[i];
+    }
+    
+    if( len > 0 )
+    {
+        CAN1_TX_Data[0] = CAN1_RX_Data[0];
+        CAN1_TX_Data[1] = CAN1_RX_Data[1];
+    }
+
         
-        for(i=0;i<8;i++)
-        {
-            canbuf[i]=i;            
-        }
-        
-        /* DBL1 UP */
-        if( kz_data_array[0] == 1 )
-        {
-            Can_Send_Msg( CAN1, 0x3456, canbuf, 8 );
-        }
-        /* DBL1 DOWN */
-        else if( kz_data_array[0] == 2 )
-        {
-            Can_Send_Msg( CAN1, 0x3488, canbuf, 8 );
-        }
+    /* DBL1 UP */
+    if( kz_data_array[0] == 1 )
+    {
+        BSP_CAN_Send(CAN1, &CAN1_TX_UpDown, CAN1TX_UP_ID, CAN1_TX_Data, 20);           
+    }
+    /* DBL1 DOWN */
+    else if( kz_data_array[0] == 2 )
+    {
+        BSP_CAN_Send(CAN1, &CAN1_TX_UpDown, CAN1TX_DOWN_ID, CAN1_TX_Data, 20);
+    }
 		   
 
 }

@@ -58,29 +58,29 @@ void GetAdr(void)
   u8 adr_temp=0;
   static u8 adr_pre=0;
   static u16 adr_cnt=0;
- 
+  
   adr_temp = ReadSwDp();
-
+  
   if(adr_temp == adr_pre)
   {
-    if(adr_cnt>100)
-    {  
-      switch(adr_temp)
-      {
-        case 0x5: kz_data_array[0] = 1;break; 
-        case 0xa: kz_data_array[0] = 2;break; 
-        case 0xf: kz_data_array[0] = 0;break; 
-        default:kz_data_array[0] = 3; 
+      if(adr_cnt>100)
+      {  
+          switch(adr_temp)
+          {
+             case 0x2: kz_data_array[0] = 1;break; 
+             case 0xa: kz_data_array[0] = 2;break; 
+             case 0xf: kz_data_array[0] = 0;break; 
+             default:kz_data_array[0] = 3; 
+          }
       }
-    }
-    else
-    {
-      adr_cnt++;
-    }  
+      else
+      {
+          adr_cnt++;
+      }  
   }  
   else
   {
-    adr_cnt = 0;
+      adr_cnt = 0;
   }  
   
   adr_pre = adr_temp;

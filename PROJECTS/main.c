@@ -78,14 +78,13 @@ void Task_Loop(void)
       {                                 
           /* Reload EWDT counter */          
           EWDT_TOOGLE();
-          
-          Input_Check();           
+                          
           CAN_Comm();  
       } 
       
       if( Tms100Counter == 0 )
       {         
-
+          Input_Check();     
       }
            
      

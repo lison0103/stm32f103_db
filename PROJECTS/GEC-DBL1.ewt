@@ -4192,6 +4192,9 @@
       <name>$PROJ_DIR$\..\BSP\bsp_iocfg.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\BSP\crc16.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\BSP\delay.c</name>
     </file>
     <file>

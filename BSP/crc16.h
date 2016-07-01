@@ -1,34 +1,26 @@
 /*******************************************************************************
-* File Name          : includes.h
+* File Name          : crc16.h
 * Author             : lison
 * Version            : V1.0
-* Date               : 04/15/2016
-* Description        : 
+* Date               : 03/22/2016
+* Description        : Contains the prototype of 16-bit CRC Calculation and verification.
 *			          
 *******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef  __INCLUDES_H
-#define  __INCLUDES_H
+#ifndef __CRC16_H
+#define __CRC16_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "sys.h"
-#include "delay.h"    
-#include "led.h"  
-#include "digital_led.h"
-#include "ewdt.h"
-#include "crc16.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
+uint16_t MB_CRC16( uint8_t *pucFrame, uint16_t usLen );
 
-extern u8 kz_data_array[30];
-extern u8 EscRTBuff[100]; 
-
-#endif /* __INCLUDES_H */
+#endif /* __CRC16_H */
 
 
-/******************************  END OF FILE  *********************************/   
-
+/******************************  END OF FILE  *********************************/

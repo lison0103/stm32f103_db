@@ -109,14 +109,14 @@ void Get_GpioInput(u8 inBuff[])
 *******************************************************************************/
 void output_driver(u8 out_buff[])
 {
-	if(out_buff[0] & 0x01) 		OCP1 = 1; 		else OCP1 = 0; 					  
-	if(out_buff[0] & 0x02) 		OCP2 = 1; 		else OCP2 = 0; 	 					  
-	if(out_buff[0] & 0x04) 		OCP3 = 1; 		else OCP3 = 0;	 					  
-	if(out_buff[0] & 0x08)  	OCP4 = 1; 		else OCP4 = 0; 						  
-	if(out_buff[0] & 0x10)  	OCP5 = 1; 		else OCP5 = 0; 					  
-	if(out_buff[0] & 0x20)  	OTP1 = 1; 		else OTP1 = 0;				  
-	if(out_buff[0] & 0x40)  	OTP2 = 1; 		else OTP2 = 0;				  
-	if(out_buff[0] & 0x80)		OTP3 = 1; 		else OTP3 = 0; 	
+	if(out_buff[0] & 0x01) 		OTP1 = 1; 		else OTP1 = 0; 					  
+	if(out_buff[0] & 0x02) 		OTP2 = 1; 		else OTP2 = 0; 	 					  
+	if(out_buff[0] & 0x04) 		OTP3 = 1; 		else OTP3 = 0;	 					  
+	if(out_buff[0] & 0x08)  	OCP1 = 1; 		else OCP1 = 0; 						  
+	if(out_buff[0] & 0x10)  	OCP2 = 1; 		else OCP2 = 0; 					  
+	if(out_buff[0] & 0x20)  	OCP3 = 1; 		else OCP3 = 0;				  
+	if(out_buff[0] & 0x40)  	OCP4 = 1; 		else OCP4 = 0;				  
+	if(out_buff[0] & 0x80)		OCP5 = 1; 		else OCP5 = 0; 	
  
 }
 
@@ -284,28 +284,8 @@ void Input_Output_PinInit(void)
 #endif      
       
       /** output gpio ----------------------------------------------------- **/ 
-      /* OCP1 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
-      GPIO_Init(GPIOB , &GPIO_InitStruct);      
-
-      /* OCP2 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
-      GPIO_Init(GPIOB , &GPIO_InitStruct); 
-
-      /* OCP3 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
-      GPIO_Init(GPIOE , &GPIO_InitStruct); 
-
-      /* OCP4 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_5;
-      GPIO_Init(GPIOB , &GPIO_InitStruct); 
-
-      /* OCP5 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
-      GPIO_Init(GPIOB , &GPIO_InitStruct); 
-
       /* OTP1 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7;
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3;
       GPIO_Init(GPIOB , &GPIO_InitStruct); 
 
       /* OTP2 */
@@ -313,19 +293,39 @@ void Input_Output_PinInit(void)
       GPIO_Init(GPIOB , &GPIO_InitStruct); 
 
       /* OTP3 */
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3;
-      GPIO_Init(GPIOB , &GPIO_InitStruct);   
-   
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7;
+      GPIO_Init(GPIOB , &GPIO_InitStruct);        
+      
+      /* OCP1 */
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
+      GPIO_Init(GPIOB , &GPIO_InitStruct);      
 
+      /* OCP2 */
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_5;
+      GPIO_Init(GPIOB , &GPIO_InitStruct); 
+
+      /* OCP3 */
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
+      GPIO_Init(GPIOE , &GPIO_InitStruct); 
+
+      /* OCP4 */
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+      GPIO_Init(GPIOB , &GPIO_InitStruct); 
+
+      /* OCP5 */
+      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
+      GPIO_Init(GPIOB , &GPIO_InitStruct); 
+ 
+      OTP1 = 0;
+      OTP2 = 0;
+      OTP3 = 0; 
+      
       OCP1 = 0;
       OCP2 = 0;
       OCP3 = 0;
       OCP4 = 0;
       OCP5 = 0;
-      
-      OTP1 = 0;
-      OTP2 = 0;
-      OTP3 = 0;      
+   
 }
 
 /*******************************************************************************

@@ -55,8 +55,8 @@ void Initial_Device(void)
         /** Read swdp value, set the DBL1 UP or DBL1 DOWN **/
 //        ReadSwDp();
              
-        /** CAN1 init,baud rate 250Kbps **/
-	CAN_Mode_Init(CAN1,CAN_Mode_Normal);   
+        /** CAN1 init,baud rate 500Kbps **/
+	CAN_Int_Init(CAN1);   
         
         /* systick timer , 5ms interrupt */
  	if(SysTick_Config(SystemCoreClock / 200))
