@@ -321,7 +321,7 @@ void BSP_CAN_Send(CAN_TypeDef* CANx, CAN_TX_DATA_PROCESS_TypeDef* CanTx, uint32_
         /** packet the data pack ------------------------**/
         if( CanTx->sending == 0 && len > 0 )
         {
-            CanTx->mlen = len;
+            CanTx->mlen = len + 4;
             
             CanTx->tx_buff[0] = 0xfa;
             CanTx->tx_buff[1] = CanTx->mlen - 4;

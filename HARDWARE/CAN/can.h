@@ -34,7 +34,7 @@ typedef struct  {
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
-#define canbuffsize 100
+#define canbuffsize 120
 
 #define CAN1TX_UP_ID    0x3456
 #define CAN1RX_UP_ID    0x1234
