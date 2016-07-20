@@ -58,15 +58,24 @@ void output_driver(u8 out_buff[]);
 #define IN32     PDin(3)
 
 //OUTPUT
-#define OTP1     PBout(3)
-#define OTP2     PBout(4)
-#define OTP3     PBout(7)
+#define OTP1_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_3)
+#define OTP1_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_3)
+#define OTP2_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_4)
+#define OTP2_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_4)
+#define OTP3_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_7)
+#define OTP3_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_7)
 
-#define OCP1     PBout(6)
-#define OCP2     PBout(5)
-#define OCP3     PEout(0)
-#define OCP4     PBout(9)
-#define OCP5     PBout(8)
+#define OCP1_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_6)
+#define OCP1_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_6)
+#define OCP2_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_5)
+#define OCP2_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_5)
+#define OCP3_ON()     GPIO_SetBits(GPIOE,GPIO_Pin_0)
+#define OCP3_OFF()     GPIO_ResetBits(GPIOE,GPIO_Pin_0)
+#define OCP4_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_9)
+#define OCP4_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_9)
+#define OCP5_ON()     GPIO_SetBits(GPIOB,GPIO_Pin_8)
+#define OCP5_OFF()     GPIO_ResetBits(GPIOB,GPIO_Pin_8)
+
 
 
 #endif /* __BSP_IOCFG_H */

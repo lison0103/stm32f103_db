@@ -17,13 +17,22 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
-#define LED_NUM1        PAout(4)
-#define LED_NUM2        PAout(5)
-#define LED_NUM3        PAout(6)
-#define LED_SCLK        PBout(1)
-#define LED_RCLK        PBout(0)
-#define LED_OE          PCout(5)
-#define LED_SDI         PCout(4) 
+#define LED_NUM1_SET()        GPIO_SetBits(GPIOA,GPIO_Pin_4)
+#define LED_NUM1_CLR()        GPIO_ResetBits(GPIOA,GPIO_Pin_4)
+#define LED_NUM2_SET()        GPIO_SetBits(GPIOA,GPIO_Pin_5)
+#define LED_NUM2_CLR()        GPIO_ResetBits(GPIOA,GPIO_Pin_5)
+#define LED_NUM3_SET()        GPIO_SetBits(GPIOA,GPIO_Pin_6)
+#define LED_NUM3_CLR()        GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+
+#define LED_SCLK_SET()        GPIO_SetBits(GPIOB,GPIO_Pin_1)
+#define LED_SCLK_CLR()        GPIO_ResetBits(GPIOB,GPIO_Pin_1)
+#define LED_RCLK_SET()        GPIO_SetBits(GPIOB,GPIO_Pin_0)
+#define LED_RCLK_CLR()        GPIO_ResetBits(GPIOB,GPIO_Pin_0)
+#define LED_OE_SET()        GPIO_SetBits(GPIOC,GPIO_Pin_5)
+#define LED_OE_CLR()        GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+#define LED_SDI_SET()        GPIO_SetBits(GPIOC,GPIO_Pin_4)
+#define LED_SDI_CLR()        GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+
 
 /* Private variables ---------------------------------------------------------*/
 const u8 bcd[11] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff}; //0~9£¬null
@@ -80,9 +89,9 @@ void digital_led_gpio_init(void)
       GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5; 
       GPIO_Init(GPIOC, &GPIO_InitStruct);        
 #endif     
-      LED_OE = 0;
+      LED_OE_CLR();
       delay_ms(2);
-      LED_OE = 1;
+      LED_OE_SET();
 }
 
 /*******************************************************************************
@@ -96,26 +105,31 @@ void digital_led_gpio_init(void)
 *******************************************************************************/
 void txbyte(u8 dat)
 {
-    u8 i,j,k;
+    u8 i,j;
     
-    LED_OE = 0;
+    LED_OE_CLR();
     j = dat;
     for(i = 0; i < 8; i++)
     {
-        LED_SCLK = 0;
+        LED_SCLK_CLR();
       
-        k = (j&0x80)>>7;
-        
-        LED_SDI = k;
+        if((j & 0x80) >> 7)
+        {
+            LED_SDI_SET();
+        }
+        else
+        {
+            LED_SDI_CLR();
+        }
                                   
         j <<= 1;
         
-        LED_SCLK = 1;
+        LED_SCLK_SET();
     }
     
-    LED_RCLK = 0;
+    LED_RCLK_CLR();
     delay_us(1);
-    LED_RCLK = 1;
+    LED_RCLK_SET();
 }
 
 /*******************************************************************************
@@ -134,23 +148,23 @@ void led_display(void)
   dis_cnt++;
   if(dis_cnt>2) dis_cnt=0;
   
-  LED_NUM1 = 1;
-  LED_NUM2 = 1;
-  LED_NUM3 = 1;
+  LED_NUM1_SET();
+  LED_NUM2_SET();
+  LED_NUM3_SET();
 
   txbyte(bcd[dis_data[dis_cnt]]);
   
   if(dis_cnt==0) 
   {
-    LED_NUM1 = 0; 
+    LED_NUM1_CLR(); 
   } 
   else if(dis_cnt==1) 
   {
-    LED_NUM2 = 0; 
+    LED_NUM2_CLR(); 
   }  
   else if(dis_cnt==2) 
   {
-    LED_NUM3 = 0; 
+    LED_NUM3_CLR(); 
   }    
 }
 

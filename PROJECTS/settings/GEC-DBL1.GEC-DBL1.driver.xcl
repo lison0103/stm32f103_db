@@ -1,16 +1,16 @@
 "--endian=little" 
 
-"--cpu=Cortex-M3" 
+"--cpu=Cortex-M4" 
 
 "--fpu=None" 
 
 "-p" 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\CONFIG\debugger\ST\STM32F103xB.ddf" 
+"C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\CONFIG\debugger\ST\STM32F302xB.ddf" 
 
 "--semihosting" 
 
-"--device=STM32F103xB" 
+"--device=STM32F302xB" 
 
 "--drv_communication=USB0" 
 

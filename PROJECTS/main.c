@@ -38,11 +38,15 @@ void LED_indicator(void)
 	
 	led_idr_cnt++;
 	
-	if( led_idr_cnt >= 100 )
+	if(led_idr_cnt == 50)
 	{
-                led_idr_cnt = 0;
-		LED=!LED;                
-	}   
+            LED_ON();        
+	}  
+	else if(led_idr_cnt >= 100)   
+	{
+            led_idr_cnt = 0;
+            LED_OFF();       
+	}    
 }
 
 
@@ -64,10 +68,11 @@ void Task_Loop(void)
       
       Get_GpioInput(&EscRTBuff[4]);
       output_driver(&EscRTBuff[30]);
+      led_display();
       
       if( Tms10Counter == 0 )
       {
-        
+          
       }      
       if( Tms20Counter == 0 )
       {

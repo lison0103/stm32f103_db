@@ -80,7 +80,7 @@ void Input_Check(void)
             dis_data[2] = inputnum%10;
         }
         
-        led_display();
+//        led_display();
  
 }
 

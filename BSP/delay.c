@@ -128,6 +128,7 @@ void delay_ms(u16 nms)
 *******************************************************************************/
 void Delay_Init(void)	 
 {
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
     TIM1_Int_Init(65535, 71);
 }	
 

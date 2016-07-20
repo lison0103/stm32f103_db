@@ -52,8 +52,9 @@ void Initial_Device(void)
         EWDT_Drv_pin_config();
         ExtWdtCheck();
         
-        /** Read swdp value, set the DBL1 UP or DBL1 DOWN **/
-//        ReadSwDp();
+        /** digital led init **/
+        digital_led_gpio_init();               
+        digital_led_check();
              
         /** CAN1 init,baud rate 500Kbps **/
 	CAN_Int_Init(CAN1);   

@@ -2972,7 +2972,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STM32F103xB	ST STM32F103xB</state>
+          <state>STM32F302xB	ST STM32F302xB</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -3011,7 +3011,7 @@
         <option>
           <name>GBECoreSlave</name>
           <version>22</version>
-          <state>38</state>
+          <state>39</state>
         </option>
         <option>
           <name>OGUseCmsis</name>
@@ -3028,11 +3028,11 @@
         <option>
           <name>CoreVariant</name>
           <version>22</version>
-          <state>38</state>
+          <state>39</state>
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
-          <state>STM32F103xB	ST STM32F103xB</state>
+          <state>STM32F302xB	ST STM32F302xB</state>
         </option>
         <option>
           <name>FPU2</name>
@@ -3051,7 +3051,7 @@
         <option>
           <name>GFPUCoreSlave2</name>
           <version>22</version>
-          <state>38</state>
+          <state>39</state>
         </option>
       </data>
     </settings>

@@ -109,14 +109,14 @@ void Get_GpioInput(u8 inBuff[])
 *******************************************************************************/
 void output_driver(u8 out_buff[])
 {
-	if(out_buff[0] & 0x01) 		OTP1 = 1; 		else OTP1 = 0; 					  
-	if(out_buff[0] & 0x02) 		OTP2 = 1; 		else OTP2 = 0; 	 					  
-	if(out_buff[0] & 0x04) 		OTP3 = 1; 		else OTP3 = 0;	 					  
-	if(out_buff[0] & 0x08)  	OCP1 = 1; 		else OCP1 = 0; 						  
-	if(out_buff[0] & 0x10)  	OCP2 = 1; 		else OCP2 = 0; 					  
-	if(out_buff[0] & 0x20)  	OCP3 = 1; 		else OCP3 = 0;				  
-	if(out_buff[0] & 0x40)  	OCP4 = 1; 		else OCP4 = 0;				  
-	if(out_buff[0] & 0x80)		OCP5 = 1; 		else OCP5 = 0; 	
+	if(out_buff[0] & 0x01) 		OTP1_ON(); 		else OTP1_OFF(); 					  
+	if(out_buff[0] & 0x02) 		OTP2_ON(); 		else OTP2_OFF(); 	 					  
+	if(out_buff[0] & 0x04) 		OTP3_ON(); 		else OTP3_OFF();	 					  
+	if(out_buff[0] & 0x08)  	OCP1_ON(); 		else OCP1_OFF(); 						  
+	if(out_buff[0] & 0x10)  	OCP2_ON(); 		else OCP2_OFF(); 					  
+	if(out_buff[0] & 0x20)  	OCP3_ON(); 		else OCP3_OFF();				  
+	if(out_buff[0] & 0x40)  	OCP4_ON(); 		else OCP4_OFF();				  
+	if(out_buff[0] & 0x80)		OCP5_ON(); 		else OCP5_OFF(); 	
  
 }
 
@@ -316,15 +316,15 @@ void Input_Output_PinInit(void)
       GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
       GPIO_Init(GPIOB , &GPIO_InitStruct); 
  
-      OTP1 = 0;
-      OTP2 = 0;
-      OTP3 = 0; 
+      OTP1_OFF();
+      OTP2_OFF();
+      OTP3_OFF();
       
-      OCP1 = 0;
-      OCP2 = 0;
-      OCP3 = 0;
-      OCP4 = 0;
-      OCP5 = 0;
+      OCP1_OFF();
+      OCP2_OFF();
+      OCP3_OFF();
+      OCP4_OFF();
+      OCP5_OFF();
    
 }
 

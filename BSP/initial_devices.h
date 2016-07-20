@@ -18,6 +18,7 @@
 #include "input.h"
 #include "can.h"
 #include "ewdt.h"
+#include "digital_led.h"
 
 
 /* Exported types ------------------------------------------------------------*/

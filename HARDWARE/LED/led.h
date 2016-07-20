@@ -18,7 +18,8 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /** LED Port **/
-#define LED PBout(2)	
+#define LED_ON()   GPIO_ResetBits(GPIOB,GPIO_Pin_2)	
+#define LED_OFF()   GPIO_SetBits(GPIOB,GPIO_Pin_2)	
 
 void LED_Init(void); 
  

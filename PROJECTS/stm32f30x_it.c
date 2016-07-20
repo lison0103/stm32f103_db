@@ -30,6 +30,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f30x_it.h"
 
+extern u32 TimingDelay;    
+extern u32 SysRunTime;
+
 /** @addtogroup STM32F30x_StdPeriph_Templates
   * @{
   */
@@ -140,6 +143,21 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+    TimingDelay++;
+    SysRunTime++;
+}
+
+/*******************************************************************************
+* Function Name  : PVD_IRQHandler
+* Description    : This function handles PVD interrupt request.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void PVD_IRQHandler(void)
+{
+    /* store data */
+    while(1);
 }
 
 /******************************************************************************/
