@@ -24,6 +24,7 @@ u32 TimingDelay = 0;
 u32 SysRunTime = 0; 
 u8 kz_data_array[30];
 u8 EscRTBuff[100]; 
+u8 testmode = 0;
 
 /*******************************************************************************
 * Function Name  : LED_indicator

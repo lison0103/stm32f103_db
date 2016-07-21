@@ -155,25 +155,25 @@ u8 CAN_Int_Init(CAN_TypeDef* CANx)
             CAN_FilterInitStructure.CAN_FilterScale=CAN_FilterScale_32bit; 	
             
             //any id
-//            CAN_FilterInitStructure.CAN_FilterIdHigh=0x0000;	//32??ID
-//            CAN_FilterInitStructure.CAN_FilterIdLow=0x0000;
-//            CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0x0000;//32??MASK
-//            CAN_FilterInitStructure.CAN_FilterMaskIdLow=0x0000;
+            CAN_FilterInitStructure.CAN_FilterIdHigh=0x0000;	
+            CAN_FilterInitStructure.CAN_FilterIdLow=0x0000;
+            CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0x0000;
+            CAN_FilterInitStructure.CAN_FilterMaskIdLow=0x0000;
             
             //std id
-//            CAN_FilterInitStructure.CAN_FilterIdHigh=(0x10) << 5;	//32??ID
+//            CAN_FilterInitStructure.CAN_FilterIdHigh=(0x10) << 5;	
 //            CAN_FilterInitStructure.CAN_FilterIdLow=0x0000;
-//            CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0xffff;//32??MASK
+//            CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0xffff;
 //            CAN_FilterInitStructure.CAN_FilterMaskIdLow=0xfffc;
             
             //ext id
-            CAN_FilterInitStructure.CAN_FilterIdHigh = (((u32)CAN1RX_UP_ID << 3) & 0xFFFF0000 ) >> 16;	
-            CAN_FilterInitStructure.CAN_FilterIdLow = (((u32)CAN1RX_UP_ID << 3) | CAN_ID_EXT | CAN_RTR_DATA ) & 0xFFFF;
-            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = ((((u32)(~( CAN1RX_UP_ID ^ CAN1RX_DOWN_ID ))) << 3) & 0xFFFF0000) >> 16;
-            CAN_FilterInitStructure.CAN_FilterMaskIdLow = ((((u32)(~( CAN1RX_UP_ID ^ CAN1RX_DOWN_ID ))) << 3) | CAN_ID_EXT | CAN_RTR_DATA ) & 0xFFFF;           
+//            CAN_FilterInitStructure.CAN_FilterIdHigh = (((u32)CAN1RX_UP_ID << 3) & 0xFFFF0000 ) >> 16;	
+//            CAN_FilterInitStructure.CAN_FilterIdLow = (((u32)CAN1RX_UP_ID << 3) | CAN_ID_EXT | CAN_RTR_DATA ) & 0xFFFF;
+//            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = ((((u32)(~( CAN1RX_UP_ID ^ CAN1RX_DOWN_ID ))) << 3) & 0xFFFF0000) >> 16;
+//            CAN_FilterInitStructure.CAN_FilterMaskIdLow = ((((u32)(~( CAN1RX_UP_ID ^ CAN1RX_DOWN_ID ))) << 3) | CAN_ID_EXT | CAN_RTR_DATA ) & 0xFFFF;  
+            
             CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
             CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-
             CAN_FilterInit(&CAN_FilterInitStructure);			           
 
 #if CAN1_RX0_INT_ENABLE 
@@ -274,7 +274,7 @@ void CAN1_RX0_IRQHandler(void)
         CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
         
         /* DBL1 UP */
-        if( kz_data_array[0] == 1 )
+        if( kz_data_array[0] == 0x55 )
         {
             if( ( RxMessage.ExtId == CAN1RX_UP_ID ) && ( RxMessage.IDE == CAN_ID_EXT ) )
             {
@@ -284,7 +284,7 @@ void CAN1_RX0_IRQHandler(void)
             }
         }
         /* DBL1 DOWN */
-        else if( kz_data_array[0] == 2 )
+        else if( kz_data_array[0] == 0xaa )
         {
             if( ( RxMessage.ExtId == CAN1RX_DOWN_ID ) && ( RxMessage.IDE == CAN_ID_EXT ) )
             {
@@ -292,7 +292,17 @@ void CAN1_RX0_IRQHandler(void)
                 
                 CAN_RX_Process( RxMessage, &CAN1_RX_UpDown );
             }
-        }        
+        }
+        /* Test Mode */
+        else if( kz_data_array[0] == 0xfa )
+        {
+            if( ( RxMessage.ExtId == CAN1_TEST_ID ) && ( RxMessage.IDE == CAN_ID_EXT ) )
+            {
+                can1_receive = 1;        
+                
+                CAN_RX_Process( RxMessage, &CAN1_RX_UpDown );
+            }            
+        }
     }
 }
 #endif

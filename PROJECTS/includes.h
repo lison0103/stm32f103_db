@@ -18,6 +18,7 @@
 #include "digital_led.h"
 #include "ewdt.h"
 #include "crc16.h"
+#include "can.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -26,6 +27,7 @@
 
 extern u8 kz_data_array[30];
 extern u8 EscRTBuff[100]; 
+extern u8 testmode;
 
 #endif /* __INCLUDES_H */
 

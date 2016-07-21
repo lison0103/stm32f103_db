@@ -46,7 +46,8 @@ void Initial_Device(void)
 	LED_Init();
         
         /** input and relay output test init **/
-        Input_Output_PinInit();        
+        Input_Output_PinInit();   
+        SW_DP_Init();
         
         /** ewdt init **/
         EWDT_Drv_pin_config();
@@ -54,10 +55,13 @@ void Initial_Device(void)
         
         /** digital led init **/
         digital_led_gpio_init();               
-        digital_led_check();
+//        digital_led_check();
              
         /** CAN1 init,baud rate 500Kbps **/
-	CAN_Int_Init(CAN1);   
+	CAN_Int_Init(CAN1);  
+        
+        /* HardwareTest */
+        HardwareTEST();
         
         /* systick timer , 5ms interrupt */
  	if(SysTick_Config(SystemCoreClock / 200))

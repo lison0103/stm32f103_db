@@ -39,48 +39,74 @@ void Input_Check(void)
 {
         u32 *ulPt_Input;
         u8 *ulPt_Output;
+        u8 Dip_value;
         u8 i;
-        
-        ulPt_Input = (u32*)&EscRTBuff[4];
-        ulPt_Output = &EscRTBuff[30];
-        
-        dis_data[0] = 0;
-        dis_data[1] = 0;
-        dis_data[2] = 0;
-    
-        sflag = 0;
-        inputnum = 0;      
-        
-        
-        for( i = 0; i < 32; i++ )
-        {
-            if( *ulPt_Input & ((u32)( 1 << i )))
-            {
-                sflag++;
-                inputnum = i + 1;
-            }
-        }        
 
-        if(( inputnum == 0 ) || ( sflag > 1 ))
+        if( testmode == 1 )        
         {
-
-            *ulPt_Output = 0;
-   
+            ulPt_Input = (u32*)&EscRTBuff[4];
+            ulPt_Output = &EscRTBuff[30];
+            
             dis_data[0] = 0;
             dis_data[1] = 0;
             dis_data[2] = 0;
-        }        
-        else
-        {                        
-  
-            *ulPt_Output |= ( 1 << ( ( inputnum - 1 ) % 8 ));
-     
-            dis_data[0] = 0;
-            dis_data[1] = inputnum/10;
-            dis_data[2] = inputnum%10;
-        }
-        
-//        led_display();
+            
+            sflag = 0;
+            inputnum = 0;      
+            
+            
+            for( i = 0; i < 32; i++ )
+            {
+                if( *ulPt_Input & ((u32)( 1 << i )))
+                {
+                    sflag++;
+                    inputnum = i + 1;
+                }
+            }        
+            
+            Dip_value = ReadSwDp();
+            for( i = 0; i < 4; i++ )
+            {
+                if( Dip_value & ((u8)( 1 << i )))
+                {
+                    sflag++;
+                    inputnum = i + 33;
+                }
+            }         
+            
+            if(( inputnum == 0 ) || ( sflag > 1 ))
+            {
+                
+                *ulPt_Output = 0;
+                
+                dis_data[0] = 0;
+                dis_data[1] = 0;
+                dis_data[2] = 0;
+            }        
+            else
+            {                        
+                
+                //            *ulPt_Output |= ( 1 << ( ( inputnum - 1 ) % 8 ));
+                if( inputnum <= 32 )
+                {
+                    *ulPt_Output |= ( inputnum );
+                }
+                else
+                {
+                    switch( Dip_value )
+                    {
+                       case 0x01: *ulPt_Output |= ( inputnum );break; 
+                       case 0x02: *ulPt_Output |= ( inputnum + 32 );break; 
+                       case 0x04: *ulPt_Output |= ( inputnum + 97 );break;
+                       case 0x08: *ulPt_Output |= ( inputnum + 164 );break;
+                       default: *ulPt_Output = 0;; 
+                    }
+                }
+                dis_data[0] = 0;
+                dis_data[1] = inputnum/10;
+                dis_data[2] = inputnum%10;
+            }
+        }    
  
 }
 
@@ -124,16 +150,20 @@ void CAN_Comm(void)
 
         
     /* DBL1 UP */
-    if( kz_data_array[0] == 1 )
+    if( kz_data_array[0] == 0x55 )
     {
         BSP_CAN_Send(CAN1, &CAN1_TX_UpDown, CAN1TX_UP_ID, CAN1_TX_Data, 20);           
     }
     /* DBL1 DOWN */
-    else if( kz_data_array[0] == 2 )
+    else if( kz_data_array[0] == 0xaa )
     {
         BSP_CAN_Send(CAN1, &CAN1_TX_UpDown, CAN1TX_DOWN_ID, CAN1_TX_Data, 20);
     }
-		   
+    /* Test Mode */
+    else if( testmode == 1 )
+    {               
+        BSP_CAN_Send(CAN1, &CAN1_TX_UpDown, CAN1TX_DOWN_ID, CAN1_TX_Data, 20);
+    }		   
 
 }
 

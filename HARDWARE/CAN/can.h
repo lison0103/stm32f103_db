@@ -40,6 +40,7 @@ typedef struct  {
 #define CAN1RX_UP_ID    0x1234
 #define CAN1TX_DOWN_ID  0x3488
 #define CAN1RX_DOWN_ID  0x2345
+#define CAN1_TEST_ID  0xfaf1
 
 /* Exported functions ------------------------------------------------------- */
 u8 CAN_Int_Init(CAN_TypeDef* CANx); 
