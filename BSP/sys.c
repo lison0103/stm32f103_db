@@ -134,7 +134,7 @@ void HardwareTEST(void)
     if( len == 10 && CAN1_RX_Data[0] == 0xf1 )
     {
         waittms = 0;
-        for( u8 i = 1; i < 10 ; i++ )
+        for( u8 i = 2; i < 10 ; i++ )
         {
             CAN1_TX_Data[i] = CAN1_RX_Data[i];
         }
@@ -156,7 +156,7 @@ void HardwareTEST(void)
         
         if( len == 10 && CAN1_RX_Data[0] == 0xf1 )
         {
-            for( u8 i = 1; i < 10 ; i++ )
+            for( u8 i = 2; i < 10 ; i++ )
             {
                 if( CAN1_RX_Data[i] != testdata[i] )
                 {
@@ -167,7 +167,10 @@ void HardwareTEST(void)
             
             if( testerror == 0 )
             {
-                testmode = 1;
+                if( CAN1_RX_Data[1] == 0xb1 )
+                {
+                    testmode = 1;
+                }               
             }
         } 
         

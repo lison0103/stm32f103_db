@@ -136,6 +136,11 @@ void CAN_Comm(void)
     }     
     
     len = BSP_CAN_Receive(CAN1, &CAN1_RX_UpDown, CAN1_RX_Data, 0);
+
+    for( u8 i = 0; i < 20; i++ )
+    {
+        CAN1_TX_Data[i] = 0;
+    }    
     
     for( u8 i = 4; i < 8; i++ )
     {
