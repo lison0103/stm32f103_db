@@ -12,16 +12,16 @@
 #define __INPUT_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "sys.h"
+#include "includes.h"
 #include "bsp_iocfg.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void Input_Check(void);
 void CAN_Comm(void);
-
+void GetAdr(void);
+u8 ReadSwDp(void);
 
 
 #endif  /* __INPUT_H */

@@ -10,7 +10,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "digital_led.h"
-#include "sys.h"
 #include "delay.h"
 #include "ewdt.h"
 

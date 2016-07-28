@@ -1943,13 +1943,13 @@
       <name>$PROJ_DIR$\..\BSP\delay.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\BSP\hw_test.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\BSP\initial_devices.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\BSP\input.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\BSP\sys.c</name>
     </file>
   </group>
   <group>
@@ -2102,24 +2102,39 @@
       </excluded>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_adc.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_can.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_comp.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_crc.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_dac.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_dbgmcu.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_dma.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_exti.c</name>
@@ -2129,24 +2144,39 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_fmc.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_gpio.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_hrtim.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_i2c.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_iwdg.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_misc.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_opamp.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_pwr.c</name>
@@ -2159,6 +2189,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_spi.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_syscfg.c</name>
@@ -2168,9 +2201,15 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_usart.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Libraries\STM32F30x_StdPeriph_Driver\src\stm32f30x_wwdg.c</name>
+        <excluded>
+          <configuration>GEC-DBL1</configuration>
+        </excluded>
       </file>
     </group>
   </group>

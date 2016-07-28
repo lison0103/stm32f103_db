@@ -12,7 +12,6 @@
 #define __INITIAL_DEVICES_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "sys.h"
 #include "delay.h"    
 #include "led.h"
 #include "input.h"

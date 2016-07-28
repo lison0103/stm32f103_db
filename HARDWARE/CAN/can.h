@@ -12,7 +12,7 @@
 #define __CAN_H	 
 
 /* Includes ------------------------------------------------------------------*/
-#include "sys.h"
+#include "includes.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef struct  {

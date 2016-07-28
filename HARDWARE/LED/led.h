@@ -12,7 +12,7 @@
 #define _LED_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "sys.h"
+#include "includes.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -20,6 +20,7 @@
 /** LED Port **/
 #define LED_ON()   GPIO_ResetBits(GPIOB,GPIO_Pin_2)	
 #define LED_OFF()   GPIO_SetBits(GPIOB,GPIO_Pin_2)	
+#define LED_FLASH()   GPIOB->ODR ^= 0X0004
 
 void LED_Init(void); 
  

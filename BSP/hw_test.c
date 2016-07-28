@@ -1,89 +1,108 @@
 /*******************************************************************************
-* File Name          : sys.c
+* File Name          : hw_test.c
 * Author             : lison
 * Version            : V1.0
 * Date               : 04/15/2016
-* Description        : Contains get the DBL1 adr function.
+* Description        : Contains the DBL1 hardware test function.
 *                      
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "sys.h"
+#include "hw_test.h"
 #include "includes.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+u8 sflag,inputnum = 0;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-/*******************************************************************************
-* Function Name  : ReadSwDp
-* Description    : Read swdp data.
-*                  
-* Input          : None
-*                  None
-* Output         : None
-* Return         : swdp value.
-*******************************************************************************/
-u8 ReadSwDp(void)
-{
-    u8 swdp[4] = {0};
-    u8 value;
-    
-    swdp[0] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_4);
-    swdp[1] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_5);
-    swdp[2] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_6);
-    swdp[3] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_7);
-    
-    value = ( ((~swdp[3])&0x01) << 3 ) | ( ((~swdp[2])&0x01) << 2 ) | ( ((~swdp[1])&0x01) << 1 ) | ( ((~swdp[0])&0x01) << 0 );
-    
-    return   value;
-}
-
 
 /*******************************************************************************
-* Function Name  : GetAdr
-* Description    : Get the DBL1 up or down configuration.
+* Function Name  : Input_Check
+* Description    : Monitor the input pin status and test.
 *                  
 * Input          : None
 *                  None
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GetAdr(void)
+void Input_Check(void)
 {
+        u32 *ulPt_Input;
+        u8 *ulPt_Output;
+        u8 Dip_value;
+        u8 i;
 
-  u8 adr_temp=0;
-  static u8 adr_pre=0;
-  static u16 adr_cnt=0;
-  
-  adr_temp = ReadSwDp();
-  
-  if(adr_temp == adr_pre)
-  {
-      if(adr_cnt>100)
-      {  
-          switch(adr_temp)
-          {
-             case 0x0: kz_data_array[0] = 0xfa;break;  
-             case 0x2: kz_data_array[0] = 0x55;break; 
-             case 0xa: kz_data_array[0] = 0xaa;break; 
-             default:kz_data_array[0] = 0; 
-          }
-      }
-      else
-      {
-          adr_cnt++;
-      }  
-  }  
-  else
-  {
-      adr_cnt = 0;
-  }  
-  
-  adr_pre = adr_temp;
+        if( testmode == 1 )        
+        {
+            ulPt_Input = (u32*)&EscRTBuff[4];
+            ulPt_Output = &EscRTBuff[30];
+            
+            dis_data[0] = 0;
+            dis_data[1] = 0;
+            dis_data[2] = 0;
+            
+            sflag = 0;
+            inputnum = 0;      
+            
+            
+            for( i = 0; i < 32; i++ )
+            {
+                if( *ulPt_Input & ((u32)( 1 << i )))
+                {
+                    sflag++;
+                    inputnum = i + 1;
+                }
+            }        
+            
+            Dip_value = ReadSwDp();
+            for( i = 0; i < 4; i++ )
+            {
+                if( Dip_value & ((u8)( 1 << i )))
+                {
+                    sflag++;
+                    inputnum = i + 33;
+                }
+            }         
+            
+            if(( inputnum == 0 ) || ( sflag > 1 ))
+            {
+                
+                *ulPt_Output = 0;
+                
+                dis_data[0] = 0;
+                dis_data[1] = 0;
+                dis_data[2] = 0;
+            }        
+            else
+            {                        
+                
+                //            *ulPt_Output |= ( 1 << ( ( inputnum - 1 ) % 8 ));
+                if( inputnum <= 32 )
+                {
+                    *ulPt_Output |= ( inputnum );
+                }
+                else
+                {
+                    switch( Dip_value )
+                    {
+                       case 0x01: *ulPt_Output |= ( inputnum );break; 
+                       case 0x02: *ulPt_Output |= ( inputnum + 32 );break; 
+                       case 0x04: *ulPt_Output |= ( inputnum + 97 );break;
+                       case 0x08: *ulPt_Output |= ( inputnum + 164 );break;
+                       default: *ulPt_Output = 0;; 
+                    }
+                }
+                dis_data[0] = 0;
+                dis_data[1] = inputnum/10;
+                dis_data[2] = inputnum%10;
+            }
+        }    
+ 
 }
 
 
