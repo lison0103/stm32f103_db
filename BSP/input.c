@@ -101,7 +101,7 @@ void GetAdr(void)
 * Return         : None
 *******************************************************************************/
 void CAN_Comm(void)
- {	 
+{	 
      
     static u8 can1_comm_timeout = 0;
     u8 len = 0;
@@ -134,7 +134,14 @@ void CAN_Comm(void)
         CAN1_TX_Data[1] = CAN1_RX_Data[1];
     }
 
-        
+    /* ESC ERROR CODE display */
+    if( testmode == 0 )
+    {
+        dis_data[0] = 0;
+        dis_data[1] = CAN1_RX_Data[2]/10;
+        dis_data[2] = CAN1_RX_Data[2]%10;  
+    }
+    
     /* DBL1 UP */
     if( kz_data_array[0] == 0x55 )
     {

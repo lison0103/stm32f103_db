@@ -2116,6 +2116,12 @@
     </file>
   </group>
   <group>
+    <name>ESC</name>
+    <file>
+      <name>$PROJ_DIR$\..\ESC\esc.c</name>
+    </file>
+  </group>
+  <group>
     <name>FWLib</name>
     <group>
       <name>CMSIS</name>

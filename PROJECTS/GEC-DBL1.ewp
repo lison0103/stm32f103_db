@@ -77,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.40.6.9815</state>
+          <state>7.40.7.9864</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -320,6 +320,7 @@
           <state>$PROJ_DIR$\..\HARDWARE\CAN</state>
           <state>$PROJ_DIR$\..\HARDWARE\TIMER</state>
           <state>$PROJ_DIR$\..\BSP</state>
+          <state>$PROJ_DIR$\..\ESC</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1041,7 +1042,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.40.6.9815</state>
+          <state>7.40.7.9864</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -1285,6 +1286,7 @@
           <state>$PROJ_DIR$\..\HARDWARE\CAN</state>
           <state>$PROJ_DIR$\..\HARDWARE\TIMER</state>
           <state>$PROJ_DIR$\..\BSP</state>
+          <state>$PROJ_DIR$\..\ESC</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1950,6 +1952,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\BSP\input.c</name>
+    </file>
+  </group>
+  <group>
+    <name>ESC</name>
+    <file>
+      <name>$PROJ_DIR$\..\ESC\esc.c</name>
     </file>
   </group>
   <group>
