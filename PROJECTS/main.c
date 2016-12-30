@@ -9,7 +9,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "initial_devices.h"
-
+#include "esc.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -21,10 +21,15 @@ static u16 Tms10Counter = 0,Tms20Counter = 0,Tms50Counter = 0,Tms100Counter = 0;
 /* Private functions ---------------------------------------------------------*/
 
 u32 TimingDelay = 0;
-u32 SysRunTime = 0; 
-u8 kz_data_array[30];
-u8 EscRTBuff[100]; 
 u8 testmode = 0;
+
+/* ESC */
+DBL1EscData EscData;
+
+/* safety board data */
+u8 EscDataToSafety[3][8];
+u8 EscDataFromSafety[3][8];
+
 
 /*******************************************************************************
 * Function Name  : LED_indicator
@@ -63,26 +68,25 @@ void Task_Loop(void)
       if( ++Tms100Counter >= 19 ) Tms100Counter = 0;     
 
       
-      Get_GpioInput(&EscRTBuff[4]);
-      output_driver(&EscRTBuff[30]);
+      Get_GpioInput(&EscData.DBLInputData[0]);
+      output_driver(&EscData.DBLOutputData);
       GetAdr();
       led_display();
       
       if( Tms10Counter == 0 )
       {
-          
+          CAN_Comm();
       }      
       if( Tms20Counter == 0 )
       {
-
+          /* ESC ERROR CODE display */
+          esc_error_display();
       }  
          
       if( Tms50Counter == 0 )
       {                                 
           /* Reload EWDT counter */          
-          EWDT_TOOGLE();
-                          
-          CAN_Comm();  
+          EWDT_TOOGLE();     
       } 
       
       if( Tms100Counter == 0 )

@@ -10,6 +10,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "hw_test.h"
 #include "includes.h"
+#include "esc.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -39,8 +40,8 @@ void Input_Check(void)
 
         if( testmode == 1 )        
         {
-            ulPt_Input = (u32*)&EscRTBuff[4];
-            ulPt_Output = &EscRTBuff[30];
+            ulPt_Input = (u32*)&EscData.DBLInputData[0];
+            ulPt_Output = &EscData.DBLOutputData;
             
             dis_data[0] = 0;
             dis_data[1] = 0;
@@ -117,6 +118,7 @@ void Input_Check(void)
 *******************************************************************************/
 void HardwareTEST(void)
 {
+#if 0    
     u8 testdata[10];
     u8 testerror = 0;
     u8 len = 0;
@@ -124,7 +126,7 @@ void HardwareTEST(void)
     
     if( ReadSwDp() == 0x00 )
     {
-        kz_data_array[0] = 0xfa;
+        kz_data_array[0] = DBL1_TEST_MODE;
     }
     
     CAN1_TX_Data[0] = 0xf1;
@@ -212,6 +214,7 @@ void HardwareTEST(void)
         CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
         CAN_FilterInit(&CAN_FilterInitStructure);          
     }
+#endif    
 }
 
 

@@ -61,7 +61,7 @@ void Initial_Device(void)
 	CAN_Int_Init(CAN1);  
         
         /* HardwareTest */
-        HardwareTEST();
+//        HardwareTEST();
         
         /* systick timer , 5ms interrupt */
  	if(SysTick_Config(SystemCoreClock / 200))
@@ -93,18 +93,11 @@ void RCC_Configuration(void)
     /* Flash 2 wait state */
     FLASH_SetLatency(FLASH_Latency_2);
     /* Enable Prefetch Buffer */
-#ifdef GEC_DBL1
     FLASH_PrefetchBufferCmd(ENABLE);
-#else
-    FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
-#endif
     
     /* PLLCLK = 8MHz * 9 = 72 MHz */
-#ifdef GEC_DBL1
     RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
-#else
-    RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
-#endif
+
     /* Enable PLL */
     RCC_PLLCmd(ENABLE);
 
@@ -123,7 +116,6 @@ void RCC_Configuration(void)
 
     
     /* Enable GPIO and Peripherals clocks */   
-#ifdef GEC_DBL1
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
     
     RCC_APB1PeriphClockCmd( RCC_APB1Periph_CAN1 , ENABLE);    
@@ -133,21 +125,7 @@ void RCC_Configuration(void)
                            |RCC_AHBPeriph_GPIOC
                            |RCC_AHBPeriph_GPIOD
                            |RCC_AHBPeriph_GPIOE ,
-                           ENABLE);
-#else    
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_BKP | RCC_APB1Periph_PWR, ENABLE );
-    
-    RCC_APB1PeriphClockCmd( RCC_APB1Periph_CAN1 , ENABLE);    
-                                        
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-  
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA
-                           |RCC_APB2Periph_GPIOB
-                           |RCC_APB2Periph_GPIOC
-                           |RCC_APB2Periph_GPIOD
-                           |RCC_APB2Periph_GPIOE ,
                            ENABLE); 
-#endif  
 
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE); 
   
@@ -206,11 +184,8 @@ void PVD_Configuration(void)
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 
-#ifdef GEC_DBL1
     PWR_PVDLevelConfig(PWR_PVDLevel_4);  
-#else
-    PWR_PVDLevelConfig(PWR_PVDLevel_2V5);
-#endif
+
     PWR_PVDCmd(ENABLE);
 
 }

@@ -23,7 +23,7 @@ void digital_led_gpio_init(void);
 void digital_led_check(void);
 
 extern u8 dis_data[3];
-
+extern u8 g_u8LedFlash;
 
 
 #endif /* __DIGITAL_LED_H */

@@ -12,13 +12,13 @@
 #include "led.h"
 #include "delay.h"
 #include "includes.h"
-	 
+#include "esc.h"	 
  
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 //#define CAN_BAUDRATE  1000      /* 1MBps   */
-#define CAN_BAUDRATE  500  /* 500kBps */
-//#define CAN_BAUDRATE  250  /* 250kBps */
+//#define CAN_BAUDRATE  500  /* 500kBps */
+#define CAN_BAUDRATE  250  /* 250kBps */
 //#define CAN_BAUDRATE  125  /* 125kBps */
 //#define CAN_BAUDRATE  100  /* 100kBps */ 
 //#define CAN_BAUDRATE  50   /* 50kBps  */ 
@@ -28,22 +28,18 @@
 /* Private macro -------------------------------------------------------------*/
 #define CAN1_RX0_INT_ENABLE	1		
 
-#define CAN_FRAME_LEN   8
-#define CAN_SEND_LEN    3*CAN_FRAME_LEN
-
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+static void Can_Receive_Buffer(u8 rxmsg[], u16 canid);
 
-/* CAN1 */
-u8 CAN1_TX_Data[canbuffsize] = { 0 };
-u8 CAN1_RX_Data[canbuffsize] = { 0 };
 
 u8 can1_receive = 0;
 
-CAN_TX_DATA_PROCESS_TypeDef  CAN1_TX_UpDown;
-CAN_RX_DATA_PROCESS_TypeDef  CAN1_RX_UpDown;
+u16 g_u16CANSendFail = 0u;
 
+/* Esc receive data buffer */
+u8 EscDataFromSafetyBuffer[3][8];
 
 /*******************************************************************************
 * Function Name  : CAN_Int_Init
@@ -68,7 +64,6 @@ u8 CAN_Int_Init(CAN_TypeDef* CANx)
         NVIC_InitTypeDef  		NVIC_InitStructure;
 #endif
 
-#ifdef GEC_DBL1
         /* Enable GPIO clock */
         RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
         
@@ -87,21 +82,6 @@ u8 CAN_Int_Init(CAN_TypeDef* CANx)
         GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
         GPIO_Init(GPIOA, &GPIO_InitStructure);        
         
-#else
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	                   											 
-
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);	
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	
-	GPIO_Init(GPIOA, &GPIO_InitStructure);			
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	
-	GPIO_Init(GPIOA, &GPIO_InitStructure);			
-#endif
-        
             
             CAN_DeInit(CANx);
             CAN_StructInit(&CAN_InitStructure);
@@ -109,16 +89,16 @@ u8 CAN_Int_Init(CAN_TypeDef* CANx)
             /*  non-time-triggered communication mode */
             CAN_InitStructure.CAN_TTCM=DISABLE;			
             /* automatic offline management software */
-            CAN_InitStructure.CAN_ABOM=DISABLE;				 
+            CAN_InitStructure.CAN_ABOM=ENABLE;				 
             /* wake-sleep mode via software (Clear CAN-> MCR's SLEEP bit) */
-            CAN_InitStructure.CAN_AWUM=DISABLE;			
+            CAN_InitStructure.CAN_AWUM=ENABLE;			
             /* message is automatically transferred, in accordance with the CAN standard, */
             /* CAN hardware failure when sending packets would have been automatic retransmission until sent successfully */
             CAN_InitStructure.CAN_NART=DISABLE;//ENABLE;	
             /* message is not locked, the new over the old one */
             CAN_InitStructure.CAN_RFLM=DISABLE;		 	
             /* priority is determined by the packet identifier */
-            CAN_InitStructure.CAN_TXFP=DISABLE;			
+            CAN_InitStructure.CAN_TXFP=ENABLE;			
             CAN_InitStructure.CAN_Mode= CAN_Mode_Normal;	 
             
             /* set baud rate */
@@ -179,67 +159,27 @@ u8 CAN_Int_Init(CAN_TypeDef* CANx)
 #if CAN1_RX0_INT_ENABLE 
             /* IT Configuration for CAN1 */ 
             /* FIFO 0 message pending Interrupt ,full Interrupt , overrun Interrupt */
-            CAN_ITConfig(CAN1,CAN_IT_FMP0 | CAN_IT_FF0 | CAN_IT_FOV0, ENABLE); 		    
-#ifdef GEC_DBL1
+            CAN_ITConfig(CAN1,CAN_IT_FMP0 , ENABLE); 		    
+            CAN_ITConfig(CAN1,CAN_IT_FF0, ENABLE); 		    
+            CAN_ITConfig(CAN1,CAN_IT_FOV0, ENABLE);		    
+
             NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX0_IRQn;
-#else
-            NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX0_IRQn;
-#endif
             NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;     
             NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;            
             NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
             NVIC_Init(&NVIC_InitStructure);
 #endif
-	return 0;
+            CAN_ITConfig(CAN1, CAN_IT_TME, DISABLE);                
+            /* Enable CAN1 TX0 interrupt IRQ channel */
+            NVIC_InitStructure.NVIC_IRQChannel = (u8)CAN1_TX_IRQn;
+            NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1u;
+            NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1u;
+            NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+            NVIC_Init(&NVIC_InitStructure);    
+            
+            return 0;
 }   
 
-/*******************************************************************************
-* Function Name  : CAN_RX_Process
-* Description    : process the receive data.
-*                  
-* Input          : RxMessage: receive a CanRxMsg
-*                  CanRx: define a CAN_RX_DATA_PROCESS_TypeDef struct to receive a frame data
-* Output         : None
-* Return         : None
-*******************************************************************************/			    
-void CAN_RX_Process( CanRxMsg RxMessage, CAN_RX_DATA_PROCESS_TypeDef* CanRx )
-{
-    
-    u8 i;        
-    
-    if( ( CanRx->recving == 0 ) && ( RxMessage.Data[0] == 0xfa ) )
-    {              
-        CanRx->recv_len = RxMessage.Data[1] + 4;  
-        CanRx->mlen = CanRx->recv_len;
-        CanRx->rxcnt = 0;
-        
-        CanRx->recving = 1;
-    }
-    
-    if( CanRx->recving == 1 )
-    {
-        
-        for( i = 0; i < RxMessage.DLC; i++ )
-        {
-            /* receive data */
-            CanRx->rx_buff[ CanRx->rxcnt++ ] = RxMessage.Data[i];
-            
-        }   
-        CanRx->mlen -= RxMessage.DLC;    
-        
-        if( CanRx->mlen == 0 )            
-        {
-            CanRx->recving = 0;
-            CanRx->data_packet = 1;  
-        }
-        else if( CanRx->mlen < 0 )
-        {
-            CanRx->recving = 0;
-            CanRx->data_packet = 0;            
-        }    
-    }
-    
-}
 
 /*******************************************************************************
 * Function Name  : CAN1_RX0_IRQHandler
@@ -252,11 +192,7 @@ void CAN_RX_Process( CanRxMsg RxMessage, CAN_RX_DATA_PROCESS_TypeDef* CanRx )
 *******************************************************************************/
 #if CAN1_RX0_INT_ENABLE	
 
-#ifdef GEC_DBL1
 void USB_LP_CAN1_RX0_IRQHandler(void)
-#else
-void CAN1_RX0_IRQHandler(void)
-#endif
 {
     CanRxMsg RxMessage;
     
@@ -273,194 +209,120 @@ void CAN1_RX0_IRQHandler(void)
         
         CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
         
-        /* DBL1 UP */
-        if( kz_data_array[0] == 0x55 )
+        /** SF data RECEIVE **/
+        if(( RxMessage.ExtId >= CAN1RX_SF_ID ) && ( RxMessage.ExtId <= CAN1RX_SF_ID ))
         {
-            if( ( RxMessage.ExtId == CAN1RX_UP_ID ) && ( RxMessage.IDE == CAN_ID_EXT ) )
+            if( ( RxMessage.DLC == CAN_FRAME_LEN ) && ( RxMessage.IDE == CAN_ID_EXT ))
             {
-                can1_receive = 1;        
-                
-                CAN_RX_Process( RxMessage, &CAN1_RX_UpDown );
+                can1_receive = 1;            
+                Can_Receive_Buffer(RxMessage.Data, (u16)RxMessage.ExtId);
             }
-        }
-        /* DBL1 DOWN */
-        else if( kz_data_array[0] == 0xaa )
-        {
-            if( ( RxMessage.ExtId == CAN1RX_DOWN_ID ) && ( RxMessage.IDE == CAN_ID_EXT ) )
-            {
-                can1_receive = 1;        
-                
-                CAN_RX_Process( RxMessage, &CAN1_RX_UpDown );
-            }
-        }
+        }   
         /* Test Mode */
-        else if( kz_data_array[0] == 0xfa )
+        else if( EscData.SwdpAdr == DBL1_TEST_MODE )
         {
             if( ( RxMessage.ExtId == CAN1_TEST_ID ) && ( RxMessage.IDE == CAN_ID_EXT ) )
             {
                 can1_receive = 1;        
                 
-                CAN_RX_Process( RxMessage, &CAN1_RX_UpDown );
+                Can_Receive_Buffer(RxMessage.Data, (u16)RxMessage.ExtId);
             }            
         }
+        else
+        {}
     }
 }
 #endif
 
 /*******************************************************************************
-* Function Name  : BSP_CAN_Send
-* Description    : CAN send a frame data.
-*                  
-* Input          : CANx: CAN1 or CAN2
-*                  CanRx: define a CAN_TX_DATA_PROCESS_TypeDef struct to send a frame data
-*                  send_id: Extended identifier ID
-*                  buff: send data address
-*                  len: want to send data len
+* Function Name  : CAN1_TX_IRQHandler
+* Description    : This function handles CAN1 TX interrupt request.               
+* Input          : None
 * Output         : None
 * Return         : None
 *******************************************************************************/  
-void BSP_CAN_Send(CAN_TypeDef* CANx, CAN_TX_DATA_PROCESS_TypeDef* CanTx, uint32_t send_id, uint8_t *buff, uint32_t len)
+void CAN1_TX_IRQHandler(void)
 {
-
-        u32 i;
-        u8  result = 0;	
-        
-        
-        if( len > canbuffsize ) return;		
-				
-        /** packet the data pack ------------------------**/
-        if( CanTx->sending == 0 && len > 0 )
+    u8 result;
+    
+    CAN_ClearITPendingBit(CAN1,CAN_IT_RQCP0);
+    CAN_ITConfig(CAN1, CAN_IT_TME, DISABLE);
+    
+    /* DBL1 UP */
+    if( EscData.SwdpAdr == DBL1_UPPER_ADDR )
+    {       
+        if( g_u16CANSendFail & 0x01u )
         {
-            CanTx->mlen = len + 4;
-            
-            CanTx->tx_buff[0] = 0xfa;
-            CanTx->tx_buff[1] = CanTx->mlen - 4;
-            for( u8 j = 0; j < CanTx->mlen - 4; j++ )
+            result = Can_Send_Msg(CAN1, CAN1TX_DBL1_UPPER_ID, &EscDataToSafety[0][0], CAN_FRAME_LEN ); 
+            if( result )
             {
-                CanTx->tx_buff[j+2] = buff[j];
-            }
-            i = MB_CRC16( CanTx->tx_buff, CanTx->mlen - 2 );
-            CanTx->tx_buff[CanTx->mlen - 2] = i;
-            CanTx->tx_buff[CanTx->mlen - 1] = i>>8;    
-            
-            CanTx->p_CanBuff = &CanTx->tx_buff[0];
-            CanTx->sending = 1;
-        } 
-        
-        
-        /** CAN1 send data ---------------------------------**/
-        if( CanTx->sending == 1 )
-        {
-            
-            if( CanTx->mlen > CAN_SEND_LEN )
-            {
-                for( i = 0; i < 3; i++ )
-                {
-                    result = Can_Send_Msg(CANx, send_id, CanTx->p_CanBuff, CAN_FRAME_LEN ); 
-                    if( result != 1 )
-                    {
-                        CanTx->p_CanBuff += CAN_FRAME_LEN;
-                        CanTx->mlen -= CAN_FRAME_LEN;
-                    }
-                    
-                }
-            }
+                /* No mail box, send fail */
+                g_u16CANSendFail |= 0x01u; 
+                CAN_ITConfig(CAN1, CAN_IT_TME, ENABLE);
+            }   
             else
             {
-                if( CanTx->mlen > 2*CAN_FRAME_LEN )
-                {
-                    for( i = 0; i < 2; i++ )
-                    {
-                        result = Can_Send_Msg(CANx, send_id, CanTx->p_CanBuff, CAN_FRAME_LEN ); 
-                        if( result != 1 )
-                        {
-                            CanTx->p_CanBuff += CAN_FRAME_LEN;
-                            CanTx->mlen -= CAN_FRAME_LEN;
-                        }
-                    }   
-                }
-                else if( CanTx->mlen > CAN_FRAME_LEN )
-                {
-                    
-                    result = Can_Send_Msg(CANx, send_id, CanTx->p_CanBuff, CAN_FRAME_LEN ); 
-                    if( result != 1 )
-                    {
-                        CanTx->p_CanBuff += CAN_FRAME_LEN;
-                        CanTx->mlen -= CAN_FRAME_LEN;
-                    }                                      
-                }
-                
-                if( CanTx->mlen <= CAN_FRAME_LEN )
-                {
-                    result = Can_Send_Msg(CANx, send_id, CanTx->p_CanBuff, CanTx->mlen );
-                    if( result != 1 )
-                    {
-                        CanTx->mlen = 0;
-                        CanTx->sending = 0;
-                    }
-                }
-                
+                g_u16CANSendFail &= ~0x01u; 
             }
-        } 
-    
-}		
-
-/*******************************************************************************
-* Function Name  : BSP_CAN_Receive
-* Description    : CAN reveive a frame data.
-*                  
-* Input          : CANx: CAN1 or CAN2
-*                  CanRx: define a CAN_RX_DATA_PROCESS_TypeDef struct to receive a frame data
-*                  buff: receive data address
-*                  mlen: want to receive data len
-* Output         : None
-* Return         : Length of the received data
-*******************************************************************************/   
-uint32_t BSP_CAN_Receive(CAN_TypeDef* CANx,CAN_RX_DATA_PROCESS_TypeDef* CanRx, uint8_t *buff,uint32_t mlen)
-{
-    uint8_t *pstr;
-    uint32_t i=0,len=0;
-	
-    switch (*(uint32_t*)&CANx)
-    {
-       case CAN1_BASE:
-                       
-        /** receive a data packet **/
-        if( CanRx->data_packet == 1 )
-        {
-            if(!MB_CRC16(CanRx->rx_buff, CanRx->recv_len))
-            {          
-                /* ok */
-                pstr = &CanRx->rx_buff[2];					
-                len = CanRx->recv_len - 4;
-                CanRx->recv_len = 0;
-            }
-            else
-            {
-                /* fail */
-                for( u8 i = 0; i < CanRx->recv_len; i++ )
-                {
-                    CanRx->rx_buff[i] = 0;
-                }
-            }
-            CanRx->data_packet = 0;
-        }                         
-        break;	
-    }	   
-    
-    if(mlen && (mlen<len))
-    {
-        len = mlen;
+        }
     }
-    
-    if(len>canbuffsize) len=0;
-    
-    for(i=0;i<len;i++)
+    /* DBL1 DOWN */
+    else if( EscData.SwdpAdr == DBL1_LOWER_ADDR )
     {
-        buff[i] = pstr[i];
-    }		
-			
-    return(len);
+        if( g_u16CANSendFail & 0x01u )
+        {
+            result = Can_Send_Msg(CAN1, CAN1TX_DBL1_LOWER_ID, &EscDataToSafety[0][0], CAN_FRAME_LEN ); 
+            if( result )
+            {
+                /* No mail box, send fail */
+                g_u16CANSendFail |= 0x01u; 
+                CAN_ITConfig(CAN1, CAN_IT_TME, ENABLE);
+            }
+            else
+            {
+                g_u16CANSendFail &= ~0x01u; 
+            }
+        }
+    }
+    /* DBL1 INTERM1 */
+    else if( EscData.SwdpAdr == DBL1_INTERM1_ADDR )
+    {
+        if( g_u16CANSendFail & 0x01u )
+        {
+            result = Can_Send_Msg(CAN1, CAN1TX_DBL1_INTERM1_ID, &EscDataToSafety[0][0], CAN_FRAME_LEN ); 
+            if( result )
+            {
+                /* No mail box, send fail */
+                g_u16CANSendFail |= 0x01u; 
+                CAN_ITConfig(CAN1, CAN_IT_TME, ENABLE);
+            }
+            else
+            {
+                g_u16CANSendFail &= ~0x01u; 
+            }
+        }
+    }
+    /* DBL1 INTERM2 */
+    else if( EscData.SwdpAdr == DBL1_INTERM2_ADDR )
+    {
+        if( g_u16CANSendFail & 0x01u )
+        {
+            result = Can_Send_Msg(CAN1, CAN1TX_DBL1_INTERM2_ID, &EscDataToSafety[0][0], CAN_FRAME_LEN ); 
+            if( result )
+            {
+                /* No mail box, send fail */
+                g_u16CANSendFail |= 0x01u; 
+                CAN_ITConfig(CAN1, CAN_IT_TME, ENABLE);
+            }
+            else
+            {
+                g_u16CANSendFail &= ~0x01u; 
+            }
+        }
+    }    
+    else
+    {}      
+    
 }
 
 /*******************************************************************************
@@ -475,24 +337,32 @@ uint32_t BSP_CAN_Receive(CAN_TypeDef* CANx,CAN_RX_DATA_PROCESS_TypeDef* CanRx, u
 * Return         : 0: success
 *                  1: fail, no send mailbox 
 *******************************************************************************/		 
-u8 Can_Send_Msg(CAN_TypeDef* CANx,u32 exid,u8* msg,u8 len)
+u8 Can_Send_Msg(CAN_TypeDef* CANx,u32 exid,u8 msg[],u8 len)
 {	
-	u16 i=0;
+	u16 i = 0u;
+        u8 result = 0u;        
 	CanTxMsg TxMessage;
-	TxMessage.StdId=0x12;			// STD ID
-	TxMessage.ExtId=exid;			// EXT ID 
-//	TxMessage.IDE=CAN_Id_Standard; 	        
-        TxMessage.IDE=CAN_Id_Extended; 	        
-	TxMessage.RTR=CAN_RTR_Data;		
-	TxMessage.DLC=len;			
-	for(i=0;i<len;i++)
-	TxMessage.Data[i]=msg[i];			          
+        
+	TxMessage.StdId = 0x12u;			
+	TxMessage.ExtId = exid;			
+/*	TxMessage.IDE = CAN_Id_Standard; */
+        TxMessage.IDE = CAN_Id_Extended; 	        
+	TxMessage.RTR = CAN_RTR_Data;		
+	TxMessage.DLC = len;			
+	for(i = 0u; i < len; i++)
+        {
+          TxMessage.Data[i] = msg[i];
+        }
 	if( CAN_TxStatus_NoMailBox == CAN_Transmit(CANx, &TxMessage) )
         {
-            return 1;
+            result =  1u;
+        }
+        else
+        {
+            result =  0u;
         }
         
-        return 0;
+        return result;
 }
 
 
@@ -504,20 +374,67 @@ u8 Can_Send_Msg(CAN_TypeDef* CANx,u32 exid,u8* msg,u8 len)
 * Return         : 0: no data receive; 
 *                  other: Length of the received data;
 *******************************************************************************/
-u8 Can_Receive_Msg(CAN_TypeDef* CANx,u8 *buf)
+u8 Can_Receive_Msg(CAN_TypeDef* CANx,u8 buf[])
 {		   		   
       u32 i;
+      u8 result = 0u; 
       CanRxMsg RxMessage;
-      if( CAN_MessagePending(CANx,CAN_FIFO0)==0)return 0;		 
       
-      CAN_Receive(CANx, CAN_FIFO0, &RxMessage);	
-      for(i=0;i<8;i++)
+      if( CAN_MessagePending(CANx,CAN_FIFO0)== 0u )
       {
-          buf[i]=RxMessage.Data[i];  
+          result =  0u;		 
+      }  
+      else
+      {          
+          CAN_Receive(CANx, CAN_FIFO0, &RxMessage);
+          
+          for(i = 0u; i < RxMessage.DLC; i++)
+          {
+              buf[i] = RxMessage.Data[i];  
+          }
+          
+          result = RxMessage.DLC;
       }
-      return RxMessage.DLC;	
+      return result;	
 }
 
+
+/*******************************************************************************
+* Function Name  : Can_Receive_Buffer
+* Description    :                  
+* Input          : None
+* Output         : None
+* Return         : None 
+*******************************************************************************/
+static void Can_Receive_Buffer(u8 rxmsg[], u16 canid)
+{	  
+    u8 i;
+
+    for( i = 0u; i < 8u; i++ )
+    {
+        EscDataFromSafetyBuffer[canid - CAN1RX_SF_ID][i] = rxmsg[i];
+    }
+}
+
+/*******************************************************************************
+* Function Name  : Can_Receive_Data
+* Description    :                 
+* Input          : None 
+* Output         : None
+* Return         : None 
+*******************************************************************************/
+void Can_Receive_Data(void)
+{	  
+    u8 i,j;
+    
+    for( j = 0u; j < 3u; j++ )
+    {
+        for( i = 0u; i < 8u; i++ )
+        {
+            EscDataFromSafety[j][i] = EscDataFromSafetyBuffer[j][i];
+        }  
+    }
+}
 
 /******************************  END OF FILE  *********************************/
 

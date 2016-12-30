@@ -29,15 +29,9 @@
 *******************************************************************************/
 void Get_GpioInput(u8 inBuff[])
 {     
-
     static u16 PinValue[3][5],ByteAnd[5],ByteOr[5],read_pin_cnt = 0;
     u16 i; 
     
-    /* first, clear the data */
-    for(i = 0; i < 4; i++)
-    {
-        inBuff[i] = 0;
-    }
     
     read_pin_cnt++;  
     if(read_pin_cnt > 2) read_pin_cnt = 0;  
@@ -133,17 +127,11 @@ void Input_Output_PinInit(void)
 {
   
       GPIO_InitTypeDef GPIO_InitStruct;
-
-#ifdef GEC_DBL1           
+         
       GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
       GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
       GPIO_InitStruct.GPIO_PuPd  = GPIO_PuPd_DOWN;
-#else      
-      RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
-      GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
-      GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;   
-      GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; 
-#endif
+
 
       /** input gpio ----------------------------------------------------- **/     
       /* IN1 */
@@ -274,14 +262,11 @@ void Input_Output_PinInit(void)
       GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3;
       GPIO_Init(GPIOD , &GPIO_InitStruct);
 
-
-#ifdef GEC_DBL1       
+      
       GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
       GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
       GPIO_InitStruct.GPIO_PuPd  = GPIO_PuPd_UP;
-#else
-      GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
-#endif      
+     
       
       /** output gpio ----------------------------------------------------- **/ 
       /* OTP1 */
@@ -340,25 +325,38 @@ void Input_Output_PinInit(void)
 void SW_DP_Init(void)
 {
       GPIO_InitTypeDef GPIO_InitStructure;
-      
-#ifdef GEC_DBL1 
-      
+
       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
       GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
       GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
       GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
-      GPIO_Init(GPIOD, &GPIO_InitStructure);               
-      
-#else	 
-      
-      GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;				 
-      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; 		 
-      GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		
-      GPIO_Init(GPIOD, &GPIO_InitStructure);			
-#endif   
-   
+      GPIO_Init(GPIOD, &GPIO_InitStructure);                
 }
 
+
+/*******************************************************************************
+* Function Name  : ReadSwDp
+* Description    : Read swdp data.
+*                  
+* Input          : None
+*                  None
+* Output         : None
+* Return         : swdp value.
+*******************************************************************************/
+u8 ReadSwDp(void)
+{
+    u8 swdp[4] = {0};
+    u8 value;
+    
+    swdp[0] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_4);
+    swdp[1] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_5);
+    swdp[2] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_6);
+    swdp[3] = GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_7);
+    
+    value = ( ((~swdp[3])&0x01) << 3 ) | ( ((~swdp[2])&0x01) << 2 ) | ( ((~swdp[1])&0x01) << 1 ) | ( ((~swdp[0])&0x01) << 0 );
+    
+    return   value;
+}
 
 
 /******************************  END OF FILE  *********************************/

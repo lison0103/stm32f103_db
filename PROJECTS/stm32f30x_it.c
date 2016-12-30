@@ -31,7 +31,6 @@
 #include "stm32f30x_it.h"
 
 extern u32 TimingDelay;    
-extern u32 SysRunTime;
 
 /** @addtogroup STM32F30x_StdPeriph_Templates
   * @{
@@ -144,7 +143,6 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     TimingDelay++;
-    SysRunTime++;
 }
 
 /*******************************************************************************

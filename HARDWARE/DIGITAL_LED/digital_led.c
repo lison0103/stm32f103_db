@@ -34,12 +34,14 @@
 
 
 /* Private variables ---------------------------------------------------------*/
-const u8 bcd[11] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff}; //0~9£¬null
+const u8 bcd[13] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0x8e,0x88,0xff}; //0~9, F, A null
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+static void led_display1(void);
 
 u8 dis_data[3]={0,0,0};
+u8 g_u8LedFlash = 0u;
 
 /*******************************************************************************
 * Function Name  : digital_led_gpio_init
@@ -52,8 +54,7 @@ u8 dis_data[3]={0,0,0};
 *******************************************************************************/
 void digital_led_gpio_init(void)
 {
-    
-#ifdef GEC_DBL1
+
       GPIO_InitTypeDef GPIO_InitStructure;
           
       /* Enable GPIO clock */
@@ -72,22 +73,7 @@ void digital_led_gpio_init(void)
       
       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
       GPIO_Init(GPIOC, &GPIO_InitStructure);      
-      
-#else
-      
-      GPIO_InitTypeDef GPIO_InitStruct;
-      
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;             
-      GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;   
-      GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;       
-      GPIO_Init(GPIOA, &GPIO_InitStruct);    
-      
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1; 
-      GPIO_Init(GPIOB, &GPIO_InitStruct);  
-      
-      GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5; 
-      GPIO_Init(GPIOC, &GPIO_InitStruct);        
-#endif     
+          
       LED_OE_CLR();
       delay_ms(2);
       LED_OE_SET();
@@ -140,7 +126,7 @@ void txbyte(u8 dat)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void led_display(void)
+static void led_display1(void)
 {
   static u32 dis_cnt=0;
   
@@ -165,6 +151,42 @@ void led_display(void)
   {
     LED_NUM3_CLR(); 
   }    
+}
+
+/*******************************************************************************
+* Function Name  : led_display
+* Description    : Digital led display.
+*                  
+* Input          : None
+*                  
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void led_display(void)
+{
+    static u16 stat_u16TimerLedFlash =0;
+  
+    if( g_u8LedFlash == 1u )
+    {
+        stat_u16TimerLedFlash++;
+        if( stat_u16TimerLedFlash >= 200u )
+        {
+            stat_u16TimerLedFlash = 0u;
+            LED_NUM1_SET();
+            LED_NUM2_SET();
+            LED_NUM3_SET();
+        }
+        else if( stat_u16TimerLedFlash >= 100u )
+        {
+            led_display1();
+        }
+        else
+        {}
+    }
+    else
+    {
+        led_display1();
+    }
 }
 
 /*******************************************************************************

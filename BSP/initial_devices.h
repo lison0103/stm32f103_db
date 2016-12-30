@@ -14,7 +14,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "delay.h"    
 #include "led.h"
-#include "input.h"
 #include "can.h"
 #include "ewdt.h"
 #include "digital_led.h"
